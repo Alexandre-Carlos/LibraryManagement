@@ -1,4 +1,4 @@
-﻿using LibraryManagement.Api.Dtos.Loan;
+﻿using LibraryManagement.Api.Dtos.Loans;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LibraryManagement.Api.Controllers

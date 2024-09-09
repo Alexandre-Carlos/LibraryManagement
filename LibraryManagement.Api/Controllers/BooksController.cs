@@ -1,4 +1,5 @@
-﻿using LibraryManagement.Api.Dtos.Book;
+﻿using LibraryManagement.Api.Dtos.Books;
+using LibraryManagement.Api.Persistence;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LibraryManagement.Api.Controllers
@@ -7,6 +8,13 @@ namespace LibraryManagement.Api.Controllers
     [ApiController]
     public class BooksController : ControllerBase
     {
+        private readonly LibraryManagementDbContext _context;
+
+        public BooksController(LibraryManagementDbContext context)
+        {
+            _context = context;
+        }
+
         [HttpGet]
         public IActionResult GetAll()
         {

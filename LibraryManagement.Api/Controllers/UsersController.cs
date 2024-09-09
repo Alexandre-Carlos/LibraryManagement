@@ -1,4 +1,4 @@
-﻿using LibraryManagement.Api.Dtos.User;
+﻿using LibraryManagement.Api.Dtos.Users;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LibraryManagement.Api.Controllers

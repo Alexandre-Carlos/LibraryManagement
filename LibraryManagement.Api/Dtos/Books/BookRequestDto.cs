@@ -1,4 +1,4 @@
-﻿namespace LibraryManagement.Api.Dtos.Book
+﻿namespace LibraryManagement.Api.Dtos.Books
 {
     public class BookRequestDto
     {

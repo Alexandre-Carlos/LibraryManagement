@@ -1,4 +1,4 @@
-﻿namespace LibraryManagement.Api.Dtos.User
+﻿namespace LibraryManagement.Api.Dtos.Users
 {
     public class UserRequestDto
     {

@@ -1,4 +1,4 @@
-﻿namespace LibraryManagement.Api.Dtos.Loan
+﻿namespace LibraryManagement.Api.Dtos.Loans
 {
     public class LoanRequestDto
     {
