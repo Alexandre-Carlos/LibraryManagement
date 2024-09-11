@@ -6,19 +6,19 @@ namespace LibraryManagement.Api.Entities
     public class Loan : BaseEntity
     {
 
-        public Loan(IOptions<ReturnDaysConfig> options, int idUser, int idBook, DateTime dateOfLoan, DateTime endDateLoan, List<Book> books)
+        public Loan(int idUser, int idBook, int returnDays )
         {
             IdUser = idUser;
-
-            DateOfLoan = dateOfLoan;
-            EndDateLoan = DateTime.Now.AddDays(options.Value.Default);
-            Active = true; 
+            IdBook = idBook;
+            DateOfLoan = DateTime.Now;
+            EndDateLoan = DateTime.Now.AddDays(returnDays);
+            Active = true;
         }
 
         public int IdUser { get; private set; }
         public int IdBook { get; private set; }
-        public User User { get; private set; }
-        public Book Book { get; private set; }
+        public User User { get; set; }
+        public Book Book { get; set; }
         public DateTime DateOfLoan { get; private set; }
         public DateTime EndDateLoan { get; private set; }
         public DateTime ReturnDate { get; private set; }
@@ -28,10 +28,16 @@ namespace LibraryManagement.Api.Entities
         public void SetReturnDate()
         {
             ReturnDate = DateTime.Now;
-            TimeSpan date = DateTime.Now - DateOfLoan;
-            SetDaysOfDelay(date.Days);
+            SetDaysOfDelay();
         }
 
-        public void SetDaysOfDelay(int daysOfDelay) => DaysOfDelay = daysOfDelay;
+        private void SetDaysOfDelay()
+        {
+            TimeSpan date = DateTime.Now - DateOfLoan;
+            DaysOfDelay = date.Days;
+        } 
+
+
+
     }
 }

@@ -7,7 +7,7 @@ namespace LibraryManagement.Api.Dtos.Loans
     public class LoanResponseDto
     {
         public LoanResponseDto(int id, int idUser, string fullNameUser, int idBook, string titlteBook, 
-            DateTime dateOfLoan, DateTime endDateLoan, bool active)
+            DateTime dateOfLoan, DateTime endDateLoan)
         {
             Id = Id;
             IdUser = idUser;
@@ -17,7 +17,6 @@ namespace LibraryManagement.Api.Dtos.Loans
 
             DateOfLoan = dateOfLoan;
             EndDateLoan = endDateLoan;
-            Active = active;
         }
 
         public int Id { get; private set; }
@@ -33,7 +32,7 @@ namespace LibraryManagement.Api.Dtos.Loans
         
         public static LoanResponseDto FromEntity(Loan entity)
         {
-            return new(entity.Id, entity.User.Id, entity.User.Name, entity.Book.Id, entity.Book.Title, entity.DateOfLoan, entity.EndDateLoan, entity.Active);
+            return new(entity.Id, entity.User.Id, entity.User.Name, entity.Book.Id, entity.Book.Title, entity.DateOfLoan, entity.EndDateLoan);
         }
 
 
