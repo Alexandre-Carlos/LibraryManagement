@@ -21,7 +21,7 @@ namespace LibraryManagement.Api.Persistence
             });
 
             builder.Entity<User>(e => {
-                e.HasKey(u => u.Id); 
+                e.HasKey(u => u.Id);      
             });
 
             builder.Entity<Loan>(e => { 

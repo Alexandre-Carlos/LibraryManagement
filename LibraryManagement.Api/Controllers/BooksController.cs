@@ -1,4 +1,5 @@
 ﻿using LibraryManagement.Api.Dtos.Books;
+using LibraryManagement.Api.Entities;
 using LibraryManagement.Api.Persistence;
 using Microsoft.AspNetCore.Mvc;
 
@@ -34,11 +35,11 @@ namespace LibraryManagement.Api.Controllers
         /// <summary>
         /// Listar um livro através do identificador
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="id">Identificador do Livro</param>
         /// <returns>Dados do Livro</returns>
         [HttpGet("{id}")]
         [ProducesResponseType<BookResponseDto>(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public IActionResult GetById(int id)
         {
             var book = _context.Books.SingleOrDefault(c => c.Id == id);
@@ -53,11 +54,11 @@ namespace LibraryManagement.Api.Controllers
         /// <summary>
         /// Adicionar um novo livro
         /// </summary>
-        /// <param name="model"></param>
+        /// <param name="model">Payload dos dados para adição</param>
         /// <returns>Informações do livro adicionado</returns>
         [HttpPost]
-        [ProducesResponseType<BookResponseDto>(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType<BookResponseDto>(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public IActionResult Post([FromBody] BookRequestDto model)
         {
             var book = model.ToEntity();
@@ -73,8 +74,8 @@ namespace LibraryManagement.Api.Controllers
         /// <summary>
         /// Alterar informações de um livro
         /// </summary>
-        /// <param name="id"></param>
-        /// <param name="model"></param>
+        /// <param name="id">Identificador do Livro</param>
+        /// <param name="model">Payload dos dados para alteração</param>
         /// <returns></returns>
         [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -98,15 +99,21 @@ namespace LibraryManagement.Api.Controllers
         /// <summary>
         /// Excluir um livro
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="id">Identificador do Livro</param>
         /// <returns></returns>
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType<string>(StatusCodes.Status400BadRequest)]
         public IActionResult Delete(int id)
         {
             var book = _context.Books.SingleOrDefault(c => c.Id == id);
             if (book is null) return NotFound();
+
+            var loan = _context.Loans.Any(l => l.IdBook == id && l.Active);
+
+            if (loan)
+                return BadRequest("Usuário ainda tem emprestimos ativos, não é possível realizar a operação!");
 
             book.SetAsDeleted();
 

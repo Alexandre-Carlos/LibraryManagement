@@ -32,6 +32,7 @@ namespace LibraryManagement.Api.Entities
         {
             ReturnDate = DateTime.Now;
             SetDaysOfDelay();
+            SetActive();
         }
 
         private void SetDaysOfDelay()
@@ -40,7 +41,7 @@ namespace LibraryManagement.Api.Entities
             DaysOfDelay = date.Days;
         } 
 
-
+        private void SetActive() => Active = false;
 
     }
 }

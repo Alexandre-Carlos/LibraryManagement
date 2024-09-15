@@ -29,7 +29,7 @@ namespace LibraryManagement.Api.Controllers
         /// <returns>Dados de Emprestimo salvo</returns>
         [HttpPost]
         [ProducesResponseType<LoanResponseDto>(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public IActionResult Loan([FromBody] LoanRequestDto model)
         {
             var book = _context.Books.SingleOrDefault(b => b.Id == model.IdBook && b.Quantity > 0);
@@ -59,7 +59,7 @@ namespace LibraryManagement.Api.Controllers
         /// <returns>lista de todos os livros emprestados</returns>
         [HttpGet]
         [ProducesResponseType<LoanResponseDto>(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public IActionResult GetAllLoan()
         {
             var loans = _context.Loans
@@ -79,7 +79,7 @@ namespace LibraryManagement.Api.Controllers
         /// <returns>lista de livros emprestados para um usuário</returns>
         [HttpGet("{idUser}")]
         [ProducesResponseType<LoanResponseDto>(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public IActionResult GetAllUserLoan(int idUser)
         {
             var loans = _context.Loans
@@ -95,12 +95,12 @@ namespace LibraryManagement.Api.Controllers
         /// <summary>
         /// Listar Livro emprestado para um usuário
         /// </summary>
-        /// <param name="idUser">Identificação do usuário</param>
-        /// <param name="idBook">Identificação do Livro emprestado</param>
+        /// <param name="idUser">Identificador do usuário</param>
+        /// <param name="idBook">Identificador do Livro emprestado</param>
         /// <returns>Informaç~eso do livro emprestado</returns>
         [HttpGet("{idUser},{idBook}")]
         [ProducesResponseType<LoanResponseDto>(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public IActionResult GetLoanByBookIdAndUserId(int idUser, int idBook) 
         {
             var loans = _context.Loans
@@ -115,7 +115,7 @@ namespace LibraryManagement.Api.Controllers
         /// <summary>
         /// Devolução de emprestimo
         /// </summary>
-        /// <param name="id">Identificados do Emprestimo</param>
+        /// <param name="id">Identificador do Emprestimo</param>
         /// <param name="model">Dados do Livro e Usuário</param>
         /// <returns></returns>
         [HttpPost("{id}")]
