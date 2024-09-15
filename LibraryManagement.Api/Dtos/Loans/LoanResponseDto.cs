@@ -1,15 +1,14 @@
-﻿using LibraryManagement.Api.Configuration;
-using LibraryManagement.Api.Entities;
-using Microsoft.Extensions.Options;
+﻿using LibraryManagement.Api.Entities;
 
 namespace LibraryManagement.Api.Dtos.Loans
 {
     public class LoanResponseDto
     {
+        public LoanResponseDto() {}
         public LoanResponseDto(int id, int idUser, string fullNameUser, int idBook, string titlteBook, 
             DateTime dateOfLoan, DateTime endDateLoan)
         {
-            Id = Id;
+            Id = id;
             IdUser = idUser;
             FullNameUser = fullNameUser;
             IdBook = idBook;
@@ -26,9 +25,7 @@ namespace LibraryManagement.Api.Dtos.Loans
         public string TitlteBook { get; private set; }
         public DateTime DateOfLoan { get; private set; }
         public DateTime EndDateLoan { get; private set; }
-        public DateTime ReturnDate { get; private set; }
-        public int DaysOfDelay { get; private set; }
-        public bool Active { get; private set; }
+
         
         public static LoanResponseDto FromEntity(Loan entity)
         {

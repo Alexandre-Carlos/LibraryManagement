@@ -1,6 +1,5 @@
 ﻿using LibraryManagement.Api.Entities;
 using Microsoft.EntityFrameworkCore;
-using System.Reflection.Emit;
 
 namespace LibraryManagement.Api.Persistence
 {
@@ -8,9 +7,7 @@ namespace LibraryManagement.Api.Persistence
     {
         public LibraryManagementDbContext(DbContextOptions<LibraryManagementDbContext> options)
             : base(options)
-        {
-            
-        }
+        { }
 
         public DbSet<User> Users { get; set; }
         public DbSet<Book> Books { get; set; }

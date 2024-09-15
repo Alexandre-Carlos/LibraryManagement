@@ -15,7 +15,14 @@ namespace LibraryManagement.Api.Controllers
             _context = context;
         }
 
+        /// <summary>
+        /// Cadastrar um novo usuário
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [HttpPost]
+        [ProducesResponseType<string>(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public IActionResult Post(UserRequestDto model)
         {
             var response = model.ToEntity();
@@ -26,10 +33,23 @@ namespace LibraryManagement.Api.Controllers
             return Ok("Usuário criado com Sucesso!");
         }
 
+
+        /// <summary>
+        /// Buscar informações de um usuário
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet("{id}")]
-        public IActionResult Login(int id)
+        [ProducesResponseType<UserResponseDto>(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public IActionResult Get(int id)
         {
-            return Ok();
+            var user = _context.Users.FirstOrDefault(x => x.Id == id);
+
+            if (user is null) return NotFound("Usuário não encontrado");
+
+            var response = UserResponseDto.FromEntity(user);
+            return Ok(response);
         }
     }
 }

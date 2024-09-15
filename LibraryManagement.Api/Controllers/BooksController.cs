@@ -1,7 +1,6 @@
 ﻿using LibraryManagement.Api.Dtos.Books;
 using LibraryManagement.Api.Persistence;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.OpenApi.Validations;
 
 namespace LibraryManagement.Api.Controllers
 {
@@ -16,7 +15,13 @@ namespace LibraryManagement.Api.Controllers
             _context = context;
         }
 
+        /// <summary>
+        /// Listar todos os livros
+        /// </summary>
+        /// <returns>Lista de Livros</returns>
         [HttpGet]
+        [ProducesResponseType<BookResponseDto>(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public IActionResult GetAll()
         {
             var books = _context.Books.Where(c => !c.IsDeleted).ToList();
@@ -26,19 +31,33 @@ namespace LibraryManagement.Api.Controllers
             return Ok(response);
         }
 
+        /// <summary>
+        /// Listar um livro através do identificador
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>Dados do Livro</returns>
         [HttpGet("{id}")]
+        [ProducesResponseType<BookResponseDto>(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public IActionResult GetById(int id)
         {
             var book = _context.Books.SingleOrDefault(c => c.Id == id);
 
-            if (book is null) return NotFound();
+            if (book is null) return NotFound("Livro não encontrado");
 
             var response = BookResponseDto.FromEntity(book);
 
             return Ok(response);
         }
 
+        /// <summary>
+        /// Adicionar um novo livro
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns>Informações do livro adicionado</returns>
         [HttpPost]
+        [ProducesResponseType<BookResponseDto>(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public IActionResult Post([FromBody] BookRequestDto model)
         {
             var book = model.ToEntity();
@@ -51,7 +70,15 @@ namespace LibraryManagement.Api.Controllers
             return CreatedAtAction(nameof(GetById),new { response.Id }, response);
         }
 
+        /// <summary>
+        /// Alterar informações de um livro
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [HttpPut("{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public IActionResult Put(int id, [FromBody] BookUpdateRequestDto model)
         {
             var book = _context.Books.SingleOrDefault(c => c.Id == id);
@@ -68,7 +95,14 @@ namespace LibraryManagement.Api.Controllers
             return NoContent();
         }
 
+        /// <summary>
+        /// Excluir um livro
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public IActionResult Delete(int id)
         {
             var book = _context.Books.SingleOrDefault(c => c.Id == id);

@@ -5,7 +5,10 @@ namespace LibraryManagement.Api.Entities
 {
     public class Loan : BaseEntity
     {
-
+        public Loan()
+        {
+            
+        }
         public Loan(int idUser, int idBook, int returnDays )
         {
             IdUser = idUser;

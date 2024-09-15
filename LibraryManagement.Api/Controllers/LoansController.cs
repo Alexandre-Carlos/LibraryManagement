@@ -1,4 +1,5 @@
-﻿using LibraryManagement.Api.Configuration;
+﻿using Azure;
+using LibraryManagement.Api.Configuration;
 using LibraryManagement.Api.Dtos.Loans;
 using LibraryManagement.Api.Persistence;
 using Microsoft.AspNetCore.Mvc;
@@ -9,6 +10,7 @@ namespace LibraryManagement.Api.Controllers
 {
     [ApiController]
     [Route("api/Loans")]
+    [Produces("application/json")]
     public class LoansController : ControllerBase
     {
         private readonly LibraryManagementDbContext _context;
@@ -20,7 +22,14 @@ namespace LibraryManagement.Api.Controllers
             _returnDays = options.Value.Default;
         }
 
+        /// <summary>
+        /// Realizar o empréstimo de um livro
+        /// </summary>
+        /// <param name="model">LoanRequestDto</param>
+        /// <returns>Dados de Emprestimo salvo</returns>
         [HttpPost]
+        [ProducesResponseType<LoanResponseDto>(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public IActionResult Loan([FromBody] LoanRequestDto model)
         {
             var book = _context.Books.SingleOrDefault(b => b.Id == model.IdBook && b.Quantity > 0);
@@ -30,19 +39,27 @@ namespace LibraryManagement.Api.Controllers
 
             if (book is null) return NotFound("Livro não encontrado ou não disponível para emprestimo!");
 
-            var response = model.ToEntity(_returnDays);
+            var loan = model.ToEntity(_returnDays);
 
             book.SetLoanQuantity();
 
             _context.Books.Update(book);
 
-            _context.Loans.Add(response);
+            _context.Loans.Add(loan);
             _context.SaveChanges();
 
-            return Ok();
+            var response = LoanResponseDto.FromEntity(loan);
+
+            return CreatedAtAction(nameof(GetLoanByBookIdAndUserId), new { response.IdUser, response.IdBook }, response);
         }
 
+        /// <summary>
+        /// Listar todos os livros emprestados
+        /// </summary>
+        /// <returns>lista de todos os livros emprestados</returns>
         [HttpGet]
+        [ProducesResponseType<LoanResponseDto>(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public IActionResult GetAllLoan()
         {
             var loans = _context.Loans
@@ -55,7 +72,14 @@ namespace LibraryManagement.Api.Controllers
             return Ok(response);
         }
 
+        /// <summary>
+        /// Listar todos os livros emprestados por usuário
+        /// </summary>
+        /// <param name="idUser"></param>
+        /// <returns>lista de livros emprestados para um usuário</returns>
         [HttpGet("{idUser}")]
+        [ProducesResponseType<LoanResponseDto>(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public IActionResult GetAllUserLoan(int idUser)
         {
             var loans = _context.Loans
@@ -68,7 +92,15 @@ namespace LibraryManagement.Api.Controllers
             return Ok(response);
         }
 
+        /// <summary>
+        /// Listar Livro emprestado para um usuário
+        /// </summary>
+        /// <param name="idUser">Identificação do usuário</param>
+        /// <param name="idBook">Identificação do Livro emprestado</param>
+        /// <returns>Informaç~eso do livro emprestado</returns>
         [HttpGet("{idUser},{idBook}")]
+        [ProducesResponseType<LoanResponseDto>(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public IActionResult GetLoanByBookIdAndUserId(int idUser, int idBook) 
         {
             var loans = _context.Loans
@@ -80,8 +112,15 @@ namespace LibraryManagement.Api.Controllers
 
             return Ok(response);
         }
-
+        /// <summary>
+        /// Devolução de emprestimo
+        /// </summary>
+        /// <param name="id">Identificados do Emprestimo</param>
+        /// <param name="model">Dados do Livro e Usuário</param>
+        /// <returns></returns>
         [HttpPost("{id}")]
+        [ProducesResponseType<string>(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public IActionResult ReturnLoan(int id, [FromBody] LoanReturnRequestDto model)
         {
             var user = _context.Users.SingleOrDefault(u => u.Id == model.IdUser);
