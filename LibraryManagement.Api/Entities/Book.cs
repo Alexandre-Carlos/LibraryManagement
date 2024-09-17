@@ -17,6 +17,7 @@
             Author = author;
             Isbn = isbn;
             YearPublished = yearPublished;
+            Loans = [];
         }
 
         public string Title { get; private set; }
@@ -25,7 +26,7 @@
         public string Author { get; private set; }
         public int Quantity { get; private set; }
 
-        public List<Loan> Loans {  get; set; }
+        public List<Loan> Loans {  get; private set; }
 
         public void SetDevolutionQuantity() => Quantity ++;
 

@@ -21,7 +21,12 @@ namespace LibraryManagement.Api.Persistence
             });
 
             builder.Entity<User>(e => {
-                e.HasKey(u => u.Id);      
+                e.HasKey(u => u.Id);
+
+                e.HasMany(u => u.Loans)
+                    .WithOne(u => u.User)
+                    .HasForeignKey(u => u.IdUser)
+                    .OnDelete(DeleteBehavior.Restrict);
             });
 
             builder.Entity<Loan>(e => { 

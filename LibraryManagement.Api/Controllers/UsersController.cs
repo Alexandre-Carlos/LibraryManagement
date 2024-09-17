@@ -1,6 +1,7 @@
 ﻿using LibraryManagement.Api.Dtos.Users;
 using LibraryManagement.Api.Persistence;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace LibraryManagement.Api.Controllers
 {
@@ -44,7 +45,8 @@ namespace LibraryManagement.Api.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public IActionResult Get(int id)
         {
-            var user = _context.Users.FirstOrDefault(x => x.Id == id);
+            var user = _context.Users
+                .SingleOrDefault(x => x.Id == id);
 
             
             if (user is null) return NotFound("Usuário não encontrado");

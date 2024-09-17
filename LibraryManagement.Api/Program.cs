@@ -4,6 +4,7 @@ using LibraryManagement.Api.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +20,9 @@ var connectionString = builder.Configuration.GetConnectionString("LibraryDb");
 
 //builder.Services.AddDbContext<LibraryManagementDbContext>(o => o.UseInMemoryDatabase("LibraryManagementDb"));
 builder.Services.AddDbContext<LibraryManagementDbContext>(o => o.UseSqlServer(connectionString));
+
+builder.Services.Configure<Microsoft.AspNetCore.Http.Json.JsonOptions>(options => options.SerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
+
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -51,6 +55,8 @@ app.UseHttpsRedirection();
 app.UseRouting();
 
 app.UseAuthorization();
+
+
 
 app.MapControllers();
 

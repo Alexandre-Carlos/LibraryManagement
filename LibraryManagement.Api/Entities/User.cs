@@ -13,6 +13,7 @@
         public string Email { get; private set; }
         public List<Loan> Loans { get; private set; }
 
+
         public void SetName(string name) => Name = name;
 
         public void SetEmail(string email) => Email = email;  
