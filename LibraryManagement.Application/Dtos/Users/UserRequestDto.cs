@@ -1,6 +1,6 @@
-﻿using LibraryManagement.Api.Entities;
+﻿using LibraryManagement.Core.Entities;
 
-namespace LibraryManagement.Api.Dtos.Users
+namespace LibraryManagement.Application.Dtos.Users
 {
     public class UserRequestDto
     {

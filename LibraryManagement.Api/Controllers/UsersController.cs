@@ -1,5 +1,5 @@
-﻿using LibraryManagement.Api.Dtos.Users;
-using LibraryManagement.Api.Persistence;
+﻿using LibraryManagement.Application.Dtos.Users;
+using LibraryManagement.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 

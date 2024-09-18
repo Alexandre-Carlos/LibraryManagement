@@ -1,7 +1,7 @@
 ﻿using Azure;
 using LibraryManagement.Api.Configuration;
-using LibraryManagement.Api.Dtos.Loans;
-using LibraryManagement.Api.Persistence;
+using LibraryManagement.Application.Dtos.Loans;
+using LibraryManagement.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;

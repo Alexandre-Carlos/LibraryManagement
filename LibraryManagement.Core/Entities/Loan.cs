@@ -1,7 +1,4 @@
-﻿using LibraryManagement.Api.Configuration;
-using Microsoft.Extensions.Options;
-
-namespace LibraryManagement.Api.Entities
+﻿namespace LibraryManagement.Core.Entities
 {
     public class Loan : BaseEntity
     {

@@ -1,6 +1,6 @@
-﻿using LibraryManagement.Api.Entities;
+﻿using LibraryManagement.Core.Entities;
 
-namespace LibraryManagement.Api.Dtos.Loans
+namespace LibraryManagement.Application.Dtos.Loans
 {
     public class LoanResponseDto
     {

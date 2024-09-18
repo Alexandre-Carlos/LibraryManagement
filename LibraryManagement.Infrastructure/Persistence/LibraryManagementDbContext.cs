@@ -1,7 +1,7 @@
-﻿using LibraryManagement.Api.Entities;
+﻿using LibraryManagement.Core.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace LibraryManagement.Api.Persistence
+namespace LibraryManagement.Infrastructure.Persistence
 {
     public class LibraryManagementDbContext : DbContext
     {

@@ -1,6 +1,6 @@
-﻿using LibraryManagement.Api.Entities;
+﻿using LibraryManagement.Core.Entities;
 
-namespace LibraryManagement.Api.Dtos.Books
+namespace LibraryManagement.Application.Dtos.Books
 {
     public class BookUpdateRequestDto
     {

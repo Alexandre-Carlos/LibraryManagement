@@ -1,6 +1,5 @@
-﻿using LibraryManagement.Api.Dtos.Books;
-using LibraryManagement.Api.Entities;
-using LibraryManagement.Api.Persistence;
+﻿using LibraryManagement.Application.Dtos.Books;
+using LibraryManagement.Application.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LibraryManagement.Api.Controllers
@@ -9,11 +8,11 @@ namespace LibraryManagement.Api.Controllers
     [ApiController]
     public class BooksController : ControllerBase
     {
-        private readonly LibraryManagementDbContext _context;
+        private readonly IBookService _bookService;
 
-        public BooksController(LibraryManagementDbContext context)
+        public BooksController(IBookService bookService)
         {
-            _context = context;
+            _bookService = bookService;
         }
 
         /// <summary>
@@ -25,11 +24,7 @@ namespace LibraryManagement.Api.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public IActionResult GetAll()
         {
-            var books = _context.Books.Where(c => !c.IsDeleted).ToList();
-
-            var response = books.Select(b => BookResponseDto.FromEntity(b));
-
-            return Ok(response);
+            return Ok(_bookService.GetAll());
         }
 
         /// <summary>
@@ -42,13 +37,7 @@ namespace LibraryManagement.Api.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public IActionResult GetById(int id)
         {
-            var book = _context.Books.SingleOrDefault(c => c.Id == id);
-
-            if (book is null) return NotFound("Livro não encontrado");
-
-            var response = BookResponseDto.FromEntity(book);
-
-            return Ok(response);
+            return Ok(_bookService.GetById(id));
         }
 
         /// <summary>
@@ -61,14 +50,10 @@ namespace LibraryManagement.Api.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public IActionResult Post([FromBody] BookRequestDto model)
         {
-            var book = model.ToEntity();
+           
+            var response = _bookService.Insert(model);
 
-            _context.Books.Add(book);
-            _context.SaveChanges();
-
-            var response = BookResponseDto.FromEntity(book);
-
-            return CreatedAtAction(nameof(GetById),new { response.Id }, response);
+            return CreatedAtAction(nameof(GetById),new { response }, response.Data);
         }
 
         /// <summary>
@@ -82,16 +67,7 @@ namespace LibraryManagement.Api.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public IActionResult Put(int id, [FromBody] BookUpdateRequestDto model)
         {
-            var book = _context.Books.SingleOrDefault(c => c.Id == id);
-            if (book is null) return NotFound();
-
-            book.SetTitle(model.Title);
-            book.SetAuthor(model.Author);
-            book.SetIsbn(model.Isbn);
-            book.SetYearPublished(model.YearPublished);
-
-            _context.Books.Update(book);
-            _context.SaveChanges();
+            _bookService.Update(id, model);
 
             return NoContent();
         }
@@ -107,18 +83,7 @@ namespace LibraryManagement.Api.Controllers
         [ProducesResponseType<string>(StatusCodes.Status400BadRequest)]
         public IActionResult Delete(int id)
         {
-            var book = _context.Books.SingleOrDefault(c => c.Id == id);
-            if (book is null) return NotFound();
-
-            var loan = _context.Loans.Any(l => l.IdBook == id && l.Active);
-
-            if (loan)
-                return BadRequest("Usuário ainda tem emprestimos ativos, não é possível realizar a operação!");
-
-            book.SetAsDeleted();
-
-            _context.Books.Update(book);
-            _context.SaveChanges();
+            _bookService.Delete(id);
 
             return NoContent();
         }
