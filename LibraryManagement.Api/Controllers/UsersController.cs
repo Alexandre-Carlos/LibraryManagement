@@ -1,7 +1,8 @@
-﻿using LibraryManagement.Application.Dtos.Users;
-using LibraryManagement.Infrastructure.Persistence;
+﻿using Azure;
+using Azure.Core;
+using LibraryManagement.Application.Dtos.Users;
+using LibraryManagement.Application.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace LibraryManagement.Api.Controllers
 {
@@ -9,11 +10,11 @@ namespace LibraryManagement.Api.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
-        private readonly LibraryManagementDbContext _context;
+        private readonly IUserService _userService;
 
-        public UsersController(LibraryManagementDbContext context)
+        public UsersController(IUserService userService)
         {
-            _context = context;
+            _userService = userService;
         }
 
         /// <summary>
@@ -24,14 +25,14 @@ namespace LibraryManagement.Api.Controllers
         [HttpPost]
         [ProducesResponseType<string>(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public IActionResult Post(UserRequestDto model)
+        public IActionResult Post(UserRequestDto request)
         {
-            var response = model.ToEntity();
+            var response = _userService.Insert(request);
 
-            _context.Users.Add(response);
-            _context.SaveChanges();
+            if (!response.IsSucess)
+                return BadRequest(response.Message);
 
-            return Ok("Usuário criado com Sucesso!");
+            return CreatedAtAction(nameof(GetById), new { response }, response.Data);
         }
 
 
@@ -43,17 +44,34 @@ namespace LibraryManagement.Api.Controllers
         [HttpGet("{id}")]
         [ProducesResponseType<UserResponseDto>(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public IActionResult Get(int id)
+        public IActionResult GetById(int id)
         {
-            var user = _context.Users
-                .SingleOrDefault(x => x.Id == id);
+            var response = _userService.GetById(id);
+            if (!response.IsSucess)
+                return BadRequest(response.Message);
 
-            
-            if (user is null) return NotFound("Usuário não encontrado");
-
-            var response = UserResponseDto.FromEntity(user);
             return Ok(response);
         }
+
+
+        /// <summary>
+        /// Buscar informações de um usuário
+        /// </summary>
+        /// <param name="id">Identificador do usuário</param>
+        /// <returns></returns>
+        [HttpGet]
+        [ProducesResponseType<UserResponseDto>(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public IActionResult GetAll()
+        {
+            var response = _userService.GetAll();
+            if (!response.IsSucess)
+                return BadRequest(response.Message);
+
+            return Ok(response);
+        }
+
+
 
         /// <summary>
         /// Alterar informações de um usuário
@@ -62,22 +80,15 @@ namespace LibraryManagement.Api.Controllers
         /// <param name="model">Payload dos dados para alteração</param>
         /// <returns></returns>
         [HttpPut("{id}")]
-        [ProducesResponseType<UserResponseDto>(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public IActionResult Put(int id, [FromBody] UserRequestDto model)
+        public IActionResult Put(int id, [FromBody] UserRequestDto request)
         {
-            var user = _context.Users.FirstOrDefault(x => x.Id == id);
+            var response = _userService.Update(id, request); 
+            if (!response.IsSucess)
+                return BadRequest(response.Message);
 
-            if (user is null) return NotFound("Usuário não encontrado");
-
-            user.SetName(model.Name);   
-            user.SetEmail(model.Email);
-
-            _context.Users.Update(user);
-            _context.SaveChanges();
-
-            var response = UserResponseDto.FromEntity(user);
-            return Ok(response);
+            return NoContent();
         }
 
         /// <summary>
@@ -91,17 +102,11 @@ namespace LibraryManagement.Api.Controllers
         [ProducesResponseType<string>(StatusCodes.Status400BadRequest)]
         public IActionResult Delete(int id)
         {
-            var user = _context.Users.FirstOrDefault(x => x.Id==id);
+            var response = _userService.DeleteById(id);
 
-            if (user is null) return NotFound("Usuário não encontrado");
-
-            var loans = _context.Loans.Any(x => x.IdUser == id && x.Active);
-
-            if (loans)
-                return BadRequest("Usuário ainda tem emprestimos ativos, não é possível realizar a operação!");
-
-            user.SetAsDeleted();
-            _context.SaveChanges();
+            if (!response.IsSucess)
+                return BadRequest(response.Message);
+            
 
             return NoContent();
         }

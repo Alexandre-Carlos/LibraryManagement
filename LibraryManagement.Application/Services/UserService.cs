@@ -1,32 +1,80 @@
-﻿using LibraryManagement.Application.Dtos.Users;
+﻿using LibraryManagement.Application.Dtos;
+using LibraryManagement.Application.Dtos.Users;
+using LibraryManagement.Infrastructure.Persistence;
 
 namespace LibraryManagement.Application.Services
 {
     public class UserService : IUserService
     {
-        public UserResponseDto DeleteById(int id)
+        private readonly LibraryManagementDbContext _context;
+
+        public UserService(LibraryManagementDbContext context)
         {
-            throw new NotImplementedException();
+            _context = context;
+        }
+        public ResultViewModel DeleteById(int id)
+        {
+            var user = _context.Users.FirstOrDefault(x => x.Id == id);
+
+            if (user is null) return ResultViewModel.Error("Usuário não encontrado");
+
+            var loans = _context.Loans.Any(x => x.IdUser == id && x.Active);
+
+            if (loans)
+                return ResultViewModel.Error("Usuário ainda tem emprestimos ativos, não é possível realizar a operação!");
+
+            user.SetAsDeleted();
+            _context.SaveChanges();
+
+            return ResultViewModel.Sucess();
         }
 
-        public List<UserResponseDto> GetAll()
+        public ResultViewModel<List<UserResponseDto>> GetAll()
         {
-            throw new NotImplementedException();
+            var user = _context.Users.ToList();
+
+            var response = user.Select(u => UserResponseDto.FromEntity(u)).ToList();
+
+            return ResultViewModel<List<UserResponseDto>>.Sucess(response);
         }
 
-        public UserResponseDto GetById(int id)
+        public ResultViewModel<UserResponseDto> GetById(int id)
         {
-            throw new NotImplementedException();
+            var user = _context.Users
+                .SingleOrDefault(x => x.Id == id);
+
+            if (user is null) return ResultViewModel<UserResponseDto>.Error("Usuário não encontrado");
+
+            var response = UserResponseDto.FromEntity(user);
+
+            return ResultViewModel<UserResponseDto>.Sucess(response);
         }
 
-        public UserResponseDto Insert(UserRequestDto request)
+        public ResultViewModel<int> Insert(UserRequestDto request)
         {
-            throw new NotImplementedException();
+            var user = request.ToEntity();
+
+            _context.Users.Add(user);
+            _context.SaveChanges();
+
+            var response = UserResponseDto.FromEntity(user);
+
+            return ResultViewModel<int>.Sucess(response.Id);
         }
 
-        public UserResponseDto Update(int id, UserRequestDto request)
+        public ResultViewModel Update(int id, UserRequestDto request)
         {
-            throw new NotImplementedException();
+            var user = _context.Users.FirstOrDefault(x => x.Id == id);
+
+            if (user is null) return ResultViewModel.Error("Usuário não encontrado");
+
+            user.SetName(request.Name);
+            user.SetEmail(request.Email);
+
+            _context.Users.Update(user);
+            _context.SaveChanges();
+
+            return ResultViewModel.Sucess();
         }
     }
 }

@@ -24,7 +24,12 @@ namespace LibraryManagement.Api.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public IActionResult GetAll()
         {
-            return Ok(_bookService.GetAll());
+            var response = _bookService.GetAll();
+
+            if (!response.IsSucess)
+                return BadRequest(response.Message);
+
+            return Ok(response);
         }
 
         /// <summary>
@@ -37,7 +42,12 @@ namespace LibraryManagement.Api.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public IActionResult GetById(int id)
         {
-            return Ok(_bookService.GetById(id));
+            var response = _bookService.GetById(id);
+
+            if (!response.IsSucess)
+                return BadRequest(response.Message);
+
+            return Ok(response);
         }
 
         /// <summary>
@@ -50,8 +60,10 @@ namespace LibraryManagement.Api.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public IActionResult Post([FromBody] BookRequestDto model)
         {
-           
             var response = _bookService.Insert(model);
+
+            if (!response.IsSucess)
+                return BadRequest(response.Message);
 
             return CreatedAtAction(nameof(GetById),new { response }, response.Data);
         }
@@ -67,7 +79,10 @@ namespace LibraryManagement.Api.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public IActionResult Put(int id, [FromBody] BookUpdateRequestDto model)
         {
-            _bookService.Update(id, model);
+            var response = _bookService.Update(id, model);
+
+            if (!response.IsSucess)
+               return BadRequest(response.Message);
 
             return NoContent();
         }
@@ -83,7 +98,10 @@ namespace LibraryManagement.Api.Controllers
         [ProducesResponseType<string>(StatusCodes.Status400BadRequest)]
         public IActionResult Delete(int id)
         {
-            _bookService.Delete(id);
+            var response =_bookService.Delete(id);
+
+            if (!response.IsSucess)
+                return BadRequest(response.Message);
 
             return NoContent();
         }

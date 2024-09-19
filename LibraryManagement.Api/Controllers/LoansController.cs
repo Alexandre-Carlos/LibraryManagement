@@ -1,10 +1,6 @@
-﻿using Azure;
-using LibraryManagement.Api.Configuration;
-using LibraryManagement.Application.Dtos.Loans;
-using LibraryManagement.Infrastructure.Persistence;
+﻿using LibraryManagement.Application.Dtos.Loans;
+using LibraryManagement.Application.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 
 namespace LibraryManagement.Api.Controllers
 {
@@ -13,13 +9,11 @@ namespace LibraryManagement.Api.Controllers
     [Produces("application/json")]
     public class LoansController : ControllerBase
     {
-        private readonly LibraryManagementDbContext _context;
-        private readonly int _returnDays;
+        private readonly ILoanService _loanService;
 
-        public LoansController(LibraryManagementDbContext context, IOptions<ReturnDaysConfig> options)
+        public LoansController(ILoanService loanService)
         {
-            _context = context;
-            _returnDays = options.Value.Default;
+            _loanService = loanService;
         }
 
         /// <summary>
@@ -30,27 +24,14 @@ namespace LibraryManagement.Api.Controllers
         [HttpPost]
         [ProducesResponseType<LoanResponseDto>(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public IActionResult Loan([FromBody] LoanRequestDto model)
+        public IActionResult Loan([FromBody] LoanRequestDto request)
         {
-            var book = _context.Books.SingleOrDefault(b => b.Id == model.IdBook && b.Quantity > 0);
-            var user = _context.Users.SingleOrDefault(u => u.Id == model.IdUser);
+            var response = _loanService.Insert(request);
 
-            if(user is null) return NotFound("Usuário não encontrado");
+            if (!response.IsSucess)
+                return BadRequest(response.Message);
 
-            if (book is null) return NotFound("Livro não encontrado ou não disponível para emprestimo!");
-
-            var loan = model.ToEntity(_returnDays);
-
-            book.SetLoanQuantity();
-
-            _context.Books.Update(book);
-
-            _context.Loans.Add(loan);
-            _context.SaveChanges();
-
-            var response = LoanResponseDto.FromEntity(loan);
-
-            return CreatedAtAction(nameof(GetLoanByBookIdAndUserId), new { response.IdUser, response.IdBook }, response);
+            return CreatedAtAction(nameof(GetById), new { response }, response.Data);
         }
 
         /// <summary>
@@ -62,12 +43,27 @@ namespace LibraryManagement.Api.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public IActionResult GetAllLoan()
         {
-            var loans = _context.Loans
-                .Include(l => l.Book)
-                .Include(l => l.User)
-                .Where(c => !c.IsDeleted && c.Active);
+            var response = _loanService.GetAll();
 
-            var response =loans.Select(l => LoanResponseDto.FromEntity(l));
+            if (!response.IsSucess)
+                return BadRequest(response.Message);
+
+            return Ok(response);
+        }
+
+        /// <summary>
+        /// Buscar um livro emprestado
+        /// </summary>
+        /// <returns>Buscar o livro emprestado</returns>
+        [HttpGet("{id}")]
+        [ProducesResponseType<LoanResponseDto>(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public IActionResult GetById(int id)
+        {
+            var response = _loanService.GetById(id);
+
+            if (!response.IsSucess)
+                return BadRequest(response.Message);
 
             return Ok(response);
         }
@@ -77,17 +73,15 @@ namespace LibraryManagement.Api.Controllers
         /// </summary>
         /// <param name="idUser"></param>
         /// <returns>lista de livros emprestados para um usuário</returns>
-        [HttpGet("{idUser}")]
+        [HttpGet("user/{idUser}")]
         [ProducesResponseType<LoanResponseDto>(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public IActionResult GetAllUserLoan(int idUser)
         {
-            var loans = _context.Loans
-                .Include(l => l.Book)
-                .Include(l => l.User)
-                .Where(c => !c.IsDeleted && c.Active && c.IdUser == idUser);
+            var response = _loanService.GetAllUserLoan(idUser);
 
-            var response = loans.Select(l => LoanResponseDto.FromEntity(l));
+            if (!response.IsSucess)
+                return BadRequest(response.Message);
 
             return Ok(response);
         }
@@ -103,12 +97,10 @@ namespace LibraryManagement.Api.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public IActionResult GetLoanByBookIdAndUserId(int idUser, int idBook) 
         {
-            var loans = _context.Loans
-                .Include(l => l.Book)
-                .Include(l => l.User)
-                .Where(c => !c.IsDeleted && c.Active && c.IdUser == idUser && c.IdBook == idBook);
+            var response = _loanService.GetLoanByBookIdAndUserId(idBook, idUser);
 
-            var response = loans.Select(l => LoanResponseDto.FromEntity(l));
+            if (!response.IsSucess)
+                return BadRequest(response.Message);
 
             return Ok(response);
         }
@@ -123,23 +115,12 @@ namespace LibraryManagement.Api.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public IActionResult ReturnLoan(int id, [FromBody] LoanReturnRequestDto model)
         {
-            var user = _context.Users.SingleOrDefault(u => u.Id == model.IdUser);
-            if (user is null) return NotFound("Usuário não encontrado");
+            var response = _loanService.ReturnLoan(id, model);
 
-            var book = _context.Books.SingleOrDefault(b => b.Id == model.IdBook);
-            if (book is null) return NotFound("Livro não encontrado ou não disponível para emprestimo!");
+            if (!response.IsSucess)
+                return BadRequest(response.Message);
 
-            var loan = _context.Loans.SingleOrDefault(l => l.Id == id);
-            if (loan is null) return NotFound("Emprestimo não encontrado!");
-
-            loan.SetReturnDate();
-            book.SetDevolutionQuantity();
-
-            _context.Books.Update(book);
-            _context.Loans.Update(loan);
-            _context.SaveChanges();
-
-            return Ok("Devolução realizada com sucesso!");
+            return NoContent();
         }
     }
 }
