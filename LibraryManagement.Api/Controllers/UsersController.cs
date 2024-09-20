@@ -30,9 +30,9 @@ namespace LibraryManagement.Api.Controllers
             var response = _userService.Insert(request);
 
             if (!response.IsSucess)
-                return BadRequest(response.Message);
+                return BadRequest(response);
 
-            return CreatedAtAction(nameof(GetById), new { response }, response.Data);
+            return CreatedAtAction(nameof(GetById), new { id = response.Data }, response);
         }
 
 
@@ -48,7 +48,7 @@ namespace LibraryManagement.Api.Controllers
         {
             var response = _userService.GetById(id);
             if (!response.IsSucess)
-                return BadRequest(response.Message);
+                return BadRequest(response);
 
             return Ok(response);
         }
@@ -66,7 +66,7 @@ namespace LibraryManagement.Api.Controllers
         {
             var response = _userService.GetAll();
             if (!response.IsSucess)
-                return BadRequest(response.Message);
+                return BadRequest(response);
 
             return Ok(response);
         }
@@ -86,7 +86,7 @@ namespace LibraryManagement.Api.Controllers
         {
             var response = _userService.Update(id, request); 
             if (!response.IsSucess)
-                return BadRequest(response.Message);
+                return BadRequest(response);
 
             return NoContent();
         }
@@ -105,7 +105,7 @@ namespace LibraryManagement.Api.Controllers
             var response = _userService.DeleteById(id);
 
             if (!response.IsSucess)
-                return BadRequest(response.Message);
+                return BadRequest(response);
             
 
             return NoContent();

@@ -27,7 +27,7 @@ namespace LibraryManagement.Api.Controllers
             var response = _bookService.GetAll();
 
             if (!response.IsSucess)
-                return BadRequest(response.Message);
+                return BadRequest(response);
 
             return Ok(response);
         }
@@ -45,7 +45,7 @@ namespace LibraryManagement.Api.Controllers
             var response = _bookService.GetById(id);
 
             if (!response.IsSucess)
-                return BadRequest(response.Message);
+                return BadRequest(response);
 
             return Ok(response);
         }
@@ -63,9 +63,9 @@ namespace LibraryManagement.Api.Controllers
             var response = _bookService.Insert(model);
 
             if (!response.IsSucess)
-                return BadRequest(response.Message);
+                return BadRequest(response);
 
-            return CreatedAtAction(nameof(GetById),new { response }, response.Data);
+            return CreatedAtAction(nameof(GetById),new { id = response.Data }, response);
         }
 
         /// <summary>
@@ -82,7 +82,7 @@ namespace LibraryManagement.Api.Controllers
             var response = _bookService.Update(id, model);
 
             if (!response.IsSucess)
-               return BadRequest(response.Message);
+               return BadRequest(response);
 
             return NoContent();
         }
@@ -101,7 +101,7 @@ namespace LibraryManagement.Api.Controllers
             var response =_bookService.Delete(id);
 
             if (!response.IsSucess)
-                return BadRequest(response.Message);
+                return BadRequest(response);
 
             return NoContent();
         }

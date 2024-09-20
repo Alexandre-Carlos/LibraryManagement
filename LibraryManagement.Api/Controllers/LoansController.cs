@@ -29,9 +29,9 @@ namespace LibraryManagement.Api.Controllers
             var response = _loanService.Insert(request);
 
             if (!response.IsSucess)
-                return BadRequest(response.Message);
+                return BadRequest(response);
 
-            return CreatedAtAction(nameof(GetById), new { response }, response.Data);
+            return CreatedAtAction(nameof(GetById), new { id = response.Data }, response);
         }
 
         /// <summary>
@@ -63,7 +63,7 @@ namespace LibraryManagement.Api.Controllers
             var response = _loanService.GetById(id);
 
             if (!response.IsSucess)
-                return BadRequest(response.Message);
+                return BadRequest(response);
 
             return Ok(response);
         }
@@ -81,7 +81,7 @@ namespace LibraryManagement.Api.Controllers
             var response = _loanService.GetAllUserLoan(idUser);
 
             if (!response.IsSucess)
-                return BadRequest(response.Message);
+                return BadRequest(response);
 
             return Ok(response);
         }
@@ -100,7 +100,7 @@ namespace LibraryManagement.Api.Controllers
             var response = _loanService.GetLoanByBookIdAndUserId(idBook, idUser);
 
             if (!response.IsSucess)
-                return BadRequest(response.Message);
+                return BadRequest(response);
 
             return Ok(response);
         }
@@ -118,7 +118,7 @@ namespace LibraryManagement.Api.Controllers
             var response = _loanService.ReturnLoan(id, model);
 
             if (!response.IsSucess)
-                return BadRequest(response.Message);
+                return BadRequest(response);
 
             return NoContent();
         }

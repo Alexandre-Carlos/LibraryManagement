@@ -4,10 +4,10 @@ namespace LibraryManagement.Application.Dtos.Books
 {
     public class BookResponseDto
     {
-        public BookResponseDto(int id, string titulo, string author, string isbn, int yearPublished, int quantity)
+        public BookResponseDto(int id, string title, string author, string isbn, int yearPublished, int quantity)
         {
             Id = id;
-            Titulo = titulo;
+            Title = title;
             Author = author;
             Isbn = isbn;
             YearPublished = yearPublished;
@@ -15,7 +15,7 @@ namespace LibraryManagement.Application.Dtos.Books
         }
 
         public int Id { get; private set; }
-        public string Titulo { get; private set; }
+        public string Title { get; private set; }
         public string Author { get; private set; }
         public string Isbn { get; private set; }
         public int YearPublished { get; private set; }
