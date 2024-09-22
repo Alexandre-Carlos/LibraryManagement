@@ -56,7 +56,7 @@ namespace LibraryManagement.Infrastructure.Persistence.Repositories
             return await _context.Loans
                 .Include(l => l.Book)
                 .Include(l => l.User)
-                .SingleOrDefaultAsync(l => l.Id == id);
+                .SingleOrDefaultAsync(l => l.Id == id && l.Active);
         }
 
         public async Task Update(Loan loan)

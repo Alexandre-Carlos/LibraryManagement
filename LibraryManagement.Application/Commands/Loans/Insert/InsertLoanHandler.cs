@@ -1,7 +1,9 @@
-﻿using LibraryManagement.Application.Dtos;
+﻿using LibraryManagement.Api.Configuration;
+using LibraryManagement.Application.Dtos;
 using LibraryManagement.Application.Dtos.Loans;
 using LibraryManagement.Core.Repositories;
 using MediatR;
+using Microsoft.Extensions.Options;
 
 namespace LibraryManagement.Application.Commands.Loans.Insert
 {
@@ -12,12 +14,12 @@ namespace LibraryManagement.Application.Commands.Loans.Insert
         private readonly IUserRepository _userRepository;
         private readonly int _returnDays;
 
-        public InsertLoanHandler(ILoanRepository repository, IBookRepository bookRepository, IUserRepository userRepository, int returnDays)
+        public InsertLoanHandler(ILoanRepository repository, IBookRepository bookRepository, IUserRepository userRepository, IOptions<ReturnDaysConfig> options)
         {
             _repository = repository;
             _bookRepository = bookRepository;
             _userRepository = userRepository;
-            _returnDays = returnDays;
+            _returnDays = options.Value.Default;
         }
 
         public async Task<ResultViewModel<int>> Handle(InsertLoanCommand request, CancellationToken cancellationToken)
@@ -26,9 +28,9 @@ namespace LibraryManagement.Application.Commands.Loans.Insert
 
             if (book is null) return ResultViewModel<int>.Error("Livro não encontrado ou não disponível para emprestimo!");
 
-            var existsUser = await _userRepository.Exist(request.IdUser);
+            var user = await _userRepository.GetById(request.IdUser);
 
-            if (!existsUser) return ResultViewModel<int>.Error("Usuário não encontrado");
+            if (user is null) return ResultViewModel<int>.Error("Usuário não encontrado");
 
             var loan = request.ToEntity(_returnDays);
 

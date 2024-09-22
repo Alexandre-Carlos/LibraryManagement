@@ -22,6 +22,7 @@ namespace LibraryManagement.Infrastructure
             var connectionString = configuration.GetConnectionString("LibraryDb");
 
             //services.AddDbContext<LibraryManagementDbContext>(o => o.UseInMemoryDatabase("LibraryManagementDb"));
+
             services.AddDbContext<LibraryManagementDbContext>(o => o.UseSqlServer(connectionString));
 
             return services;

@@ -28,12 +28,12 @@ namespace LibraryManagement.Infrastructure.Persistence.Repositories
 
         public async Task<List<User>> GetAll()
         {
-            return await _context.Users.ToListAsync();
+            return await _context.Users.Where(u => !u.IsDeleted).ToListAsync();
         }
 
         public async Task<User?> GetById(int id)
         {
-            return await _context.Users.SingleOrDefaultAsync(x => x.Id == id);
+            return await _context.Users.SingleOrDefaultAsync(x => x.Id == id && !x.IsDeleted);
         }
 
         public async Task Update(User user)

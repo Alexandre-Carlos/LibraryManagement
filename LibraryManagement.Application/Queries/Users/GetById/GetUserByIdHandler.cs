@@ -9,6 +9,11 @@ namespace LibraryManagement.Application.Queries.Users.GetById
     {
         private readonly IUserRepository _repository;
 
+        public GetUserByIdHandler(IUserRepository repository)
+        {
+            _repository = repository;
+        }
+
         public async Task<ResultViewModel<UserResponseDto>> Handle(GetUserByIdQuery request, CancellationToken cancellationToken)
         {
             var user = await _repository.GetById(request.Id);

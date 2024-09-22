@@ -39,7 +39,7 @@ namespace LibraryManagement.Infrastructure.Persistence.Repositories
 
         public async Task<Book?> GetById(int id)
         {
-            return await _context.Books.SingleOrDefaultAsync(c => c.Id == id);
+            return await _context.Books.SingleOrDefaultAsync(c => c.Id == id && !c.IsDeleted);
         }
 
         public async Task Update(Book book)

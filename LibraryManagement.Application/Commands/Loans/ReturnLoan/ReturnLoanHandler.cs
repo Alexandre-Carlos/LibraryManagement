@@ -25,8 +25,11 @@ namespace LibraryManagement.Application.Commands.Loans.ReturnLoan
             var book = await _bookRepository.GetById(request.IdBook);
             if (book is null) return ResultViewModel<string>.Error("Livro não encontrado!");
 
-            var loan = await _repository.GetById(book.Id);
+            var loan = await _repository.GetById(request.IdLoan);
             if (loan is null) return ResultViewModel<string>.Error("Emprestimo não encontrado!");
+
+            if(loan.IdBook != request.IdBook || loan.IdUser != request.IdUser)
+                return ResultViewModel<string>.Error("Dados para devolução do emprestimo incorretos!");
 
             loan.SetReturnDate();
             book.SetDevolutionQuantity();

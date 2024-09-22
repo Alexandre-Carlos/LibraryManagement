@@ -1,5 +1,4 @@
 ﻿using LibraryManagement.Application.Commands.Books.Insert;
-using LibraryManagement.Application.Services;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace LibraryManagement.Application
@@ -8,17 +7,7 @@ namespace LibraryManagement.Application
     {
         public static IServiceCollection AddApplication(this IServiceCollection services)
         {
-            services.AddService()
-                    .AddHandlers();
-            return services;
-        }
-
-        public static IServiceCollection AddService(this IServiceCollection services) 
-        {
-            services.AddScoped<IBookService, BookService>();
-            services.AddScoped<ILoanService, LoanService>();
-            services.AddScoped<IUserService, UserService>();
-
+            services.AddHandlers();
             return services;
         }
 
