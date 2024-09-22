@@ -1,7 +1,10 @@
-﻿using Azure;
-using Azure.Core;
+﻿using LibraryManagement.Application.Commands.Users.Delete;
+using LibraryManagement.Application.Commands.Users.Insert;
+using LibraryManagement.Application.Commands.Users.Update;
 using LibraryManagement.Application.Dtos.Users;
-using LibraryManagement.Application.Services;
+using LibraryManagement.Application.Queries.Users.GetAll;
+using LibraryManagement.Application.Queries.Users.GetById;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LibraryManagement.Api.Controllers
@@ -10,11 +13,11 @@ namespace LibraryManagement.Api.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
-        private readonly IUserService _userService;
+        private readonly IMediator _mediator;
 
-        public UsersController(IUserService userService)
+        public UsersController(IMediator mediator)
         {
-            _userService = userService;
+            _mediator = mediator;
         }
 
         /// <summary>
@@ -25,9 +28,9 @@ namespace LibraryManagement.Api.Controllers
         [HttpPost]
         [ProducesResponseType<string>(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public IActionResult Post(UserRequestDto request)
+        public async Task<IActionResult> Post(InsertUserCommand request)
         {
-            var response = _userService.Insert(request);
+            var response = await _mediator.Send(request);
 
             if (!response.IsSucess)
                 return BadRequest(response);
@@ -44,9 +47,9 @@ namespace LibraryManagement.Api.Controllers
         [HttpGet("{id}")]
         [ProducesResponseType<UserResponseDto>(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public IActionResult GetById(int id)
+        public async Task<IActionResult> GetById(int id)
         {
-            var response = _userService.GetById(id);
+            var response = await _mediator.Send(new GetUserByIdQuery(id));
             if (!response.IsSucess)
                 return BadRequest(response);
 
@@ -62,9 +65,9 @@ namespace LibraryManagement.Api.Controllers
         [HttpGet]
         [ProducesResponseType<UserResponseDto>(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAll()
         {
-            var response = _userService.GetAll();
+            var response = await _mediator.Send(new GetAllUserQuery());
             if (!response.IsSucess)
                 return BadRequest(response);
 
@@ -82,9 +85,9 @@ namespace LibraryManagement.Api.Controllers
         [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public IActionResult Put(int id, [FromBody] UserRequestDto request)
+        public async Task<IActionResult> Put(int id, [FromBody] UpdateUserCommand request)
         {
-            var response = _userService.Update(id, request); 
+            var response = await _mediator.Send(request);
             if (!response.IsSucess)
                 return BadRequest(response);
 
@@ -100,9 +103,9 @@ namespace LibraryManagement.Api.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType<string>(StatusCodes.Status400BadRequest)]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            var response = _userService.DeleteById(id);
+            var response = await _mediator.Send(new DeleteUserCommand(id));
 
             if (!response.IsSucess)
                 return BadRequest(response);

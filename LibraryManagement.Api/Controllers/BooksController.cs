@@ -1,5 +1,10 @@
-﻿using LibraryManagement.Application.Dtos.Books;
-using LibraryManagement.Application.Services;
+﻿using LibraryManagement.Application.Commands.Books.Delete;
+using LibraryManagement.Application.Commands.Books.Insert;
+using LibraryManagement.Application.Commands.Books.Update;
+using LibraryManagement.Application.Dtos.Books;
+using LibraryManagement.Application.Queries.Books.GetAll;
+using LibraryManagement.Application.Queries.Books.GetById;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LibraryManagement.Api.Controllers
@@ -8,11 +13,11 @@ namespace LibraryManagement.Api.Controllers
     [ApiController]
     public class BooksController : ControllerBase
     {
-        private readonly IBookService _bookService;
+        private readonly IMediator _mediator;
 
-        public BooksController(IBookService bookService)
+        public BooksController(IMediator mediator)
         {
-            _bookService = bookService;
+            _mediator = mediator;
         }
 
         /// <summary>
@@ -22,9 +27,9 @@ namespace LibraryManagement.Api.Controllers
         [HttpGet]
         [ProducesResponseType<BookResponseDto>(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAll()
         {
-            var response = _bookService.GetAll();
+            var response = await _mediator.Send(new GetAllBooksQuery());
 
             if (!response.IsSucess)
                 return BadRequest(response);
@@ -40,9 +45,9 @@ namespace LibraryManagement.Api.Controllers
         [HttpGet("{id}")]
         [ProducesResponseType<BookResponseDto>(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public IActionResult GetById(int id)
+        public async Task<IActionResult> GetById(int id)
         {
-            var response = _bookService.GetById(id);
+            var response = await _mediator.Send(new GetBookByIdQuery(id));
 
             if (!response.IsSucess)
                 return BadRequest(response);
@@ -58,9 +63,9 @@ namespace LibraryManagement.Api.Controllers
         [HttpPost]
         [ProducesResponseType<BookResponseDto>(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public IActionResult Post([FromBody] BookRequestDto model)
+        public async Task<IActionResult> Post([FromBody] InsertBookCommand request)
         {
-            var response = _bookService.Insert(model);
+            var response = await _mediator.Send(request);
 
             if (!response.IsSucess)
                 return BadRequest(response);
@@ -77,9 +82,9 @@ namespace LibraryManagement.Api.Controllers
         [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public IActionResult Put(int id, [FromBody] BookUpdateRequestDto model)
+        public async Task<IActionResult> Put(int id, [FromBody] UpdateBookCommand request)
         {
-            var response = _bookService.Update(id, model);
+            var response = await _mediator.Send(request);
 
             if (!response.IsSucess)
                return BadRequest(response);
@@ -96,9 +101,9 @@ namespace LibraryManagement.Api.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType<string>(StatusCodes.Status400BadRequest)]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            var response =_bookService.Delete(id);
+            var response = await _mediator.Send(new DeleteBookCommand(id));
 
             if (!response.IsSucess)
                 return BadRequest(response);

@@ -1,4 +1,5 @@
-﻿using LibraryManagement.Application.Services;
+﻿using LibraryManagement.Application.Commands.Books.Insert;
+using LibraryManagement.Application.Services;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace LibraryManagement.Application
@@ -7,7 +8,8 @@ namespace LibraryManagement.Application
     {
         public static IServiceCollection AddApplication(this IServiceCollection services)
         {
-            services.AddService();
+            services.AddService()
+                    .AddHandlers();
             return services;
         }
 
@@ -16,6 +18,15 @@ namespace LibraryManagement.Application
             services.AddScoped<IBookService, BookService>();
             services.AddScoped<ILoanService, LoanService>();
             services.AddScoped<IUserService, UserService>();
+
+            return services;
+        }
+
+        public static IServiceCollection AddHandlers(this IServiceCollection services) 
+        {
+            services.AddMediatR(config =>
+                config.RegisterServicesFromAssemblyContaining<InsertBookCommand>()
+            );
 
             return services;
         }

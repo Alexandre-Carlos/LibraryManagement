@@ -17,5 +17,11 @@
         public void SetName(string name) => Name = name;
 
         public void SetEmail(string email) => Email = email;  
+
+        public void Update(string name, string email)
+        {
+            Name = name;
+            Email = email;
+        }
     }
 }

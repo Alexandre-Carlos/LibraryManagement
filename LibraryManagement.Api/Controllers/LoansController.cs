@@ -1,5 +1,12 @@
-﻿using LibraryManagement.Application.Dtos.Loans;
+﻿using LibraryManagement.Application.Commands.Loans.Insert;
+using LibraryManagement.Application.Commands.Loans.ReturnLoan;
+using LibraryManagement.Application.Dtos.Loans;
+using LibraryManagement.Application.Queries.Loans.GetAll;
+using LibraryManagement.Application.Queries.Loans.GetAllUserLoan;
+using LibraryManagement.Application.Queries.Loans.GetById;
+using LibraryManagement.Application.Queries.Loans.GetLoanByBook;
 using LibraryManagement.Application.Services;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LibraryManagement.Api.Controllers
@@ -9,24 +16,24 @@ namespace LibraryManagement.Api.Controllers
     [Produces("application/json")]
     public class LoansController : ControllerBase
     {
-        private readonly ILoanService _loanService;
+        private readonly IMediator _mediator;
 
-        public LoansController(ILoanService loanService)
+        public LoansController(IMediator mediator)
         {
-            _loanService = loanService;
+            _mediator = mediator;
         }
 
         /// <summary>
         /// Realizar o empréstimo de um livro
         /// </summary>
-        /// <param name="model">LoanRequestDto</param>
+        /// <param name="request"></param>
         /// <returns>Dados de Emprestimo salvo</returns>
         [HttpPost]
         [ProducesResponseType<LoanResponseDto>(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public IActionResult Loan([FromBody] LoanRequestDto request)
+        public async Task<IActionResult> Loan([FromBody] InsertLoanCommand request)
         {
-            var response = _loanService.Insert(request);
+            var response = await _mediator.Send(request);
 
             if (!response.IsSucess)
                 return BadRequest(response);
@@ -41,9 +48,9 @@ namespace LibraryManagement.Api.Controllers
         [HttpGet]
         [ProducesResponseType<LoanResponseDto>(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public IActionResult GetAllLoan()
+        public async Task<IActionResult> GetAllLoan()
         {
-            var response = _loanService.GetAll();
+            var response = await _mediator.Send(new GetAllLoanQuery());
 
             if (!response.IsSucess)
                 return BadRequest(response.Message);
@@ -58,9 +65,9 @@ namespace LibraryManagement.Api.Controllers
         [HttpGet("{id}")]
         [ProducesResponseType<LoanResponseDto>(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public IActionResult GetById(int id)
+        public async Task<IActionResult> GetById(int id)
         {
-            var response = _loanService.GetById(id);
+            var response = await _mediator.Send(new GetLoanByIdQuery(id));
 
             if (!response.IsSucess)
                 return BadRequest(response);
@@ -76,9 +83,9 @@ namespace LibraryManagement.Api.Controllers
         [HttpGet("user/{idUser}")]
         [ProducesResponseType<LoanResponseDto>(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public IActionResult GetAllUserLoan(int idUser)
+        public async Task<IActionResult> GetAllUserLoan(int idUser)
         {
-            var response = _loanService.GetAllUserLoan(idUser);
+            var response = await _mediator.Send(new GetAllUserLoanQuery(idUser));
 
             if (!response.IsSucess)
                 return BadRequest(response);
@@ -95,9 +102,9 @@ namespace LibraryManagement.Api.Controllers
         [HttpGet("{idUser},{idBook}")]
         [ProducesResponseType<LoanResponseDto>(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public IActionResult GetLoanByBookIdAndUserId(int idUser, int idBook) 
+        public async Task<IActionResult> GetLoanByBookIdAndUserId(int idUser, int idBook) 
         {
-            var response = _loanService.GetLoanByBookIdAndUserId(idBook, idUser);
+            var response = await _mediator.Send(new GetLoanByBookQuery(idBook, idUser));
 
             if (!response.IsSucess)
                 return BadRequest(response);
@@ -108,14 +115,14 @@ namespace LibraryManagement.Api.Controllers
         /// Devolução de emprestimo
         /// </summary>
         /// <param name="id">Identificador do Emprestimo</param>
-        /// <param name="model">Dados do Livro e Usuário</param>
+        /// <param name="request">Dados do Livro e Usuário</param>
         /// <returns></returns>
         [HttpPost("{id}")]
         [ProducesResponseType<string>(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public IActionResult ReturnLoan(int id, [FromBody] LoanReturnRequestDto model)
+        public async Task<IActionResult> ReturnLoan(int id, [FromBody] ReturnLoanCommand request)
         {
-            var response = _loanService.ReturnLoan(id, model);
+            var response = await _mediator.Send(request);
 
             if (!response.IsSucess)
                 return BadRequest(response);

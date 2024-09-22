@@ -1,4 +1,6 @@
-﻿namespace LibraryManagement.Core.Entities
+﻿using System.Data;
+
+namespace LibraryManagement.Core.Entities
 {
     public class Book : BaseEntity
     {
@@ -42,6 +44,14 @@
 
         public void SetYearPublished(int yearPublished) => YearPublished = yearPublished;
 
+
+        public void Update(string title, string author, string isbn, int yearPublished)
+        {
+            Title = title;
+            Author = author;
+            Isbn = isbn;
+            YearPublished = yearPublished;
+        }
 
     }
 }
