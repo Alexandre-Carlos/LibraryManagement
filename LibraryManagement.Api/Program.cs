@@ -1,8 +1,7 @@
 using LibraryManagement.Api.Configuration;
 using LibraryManagement.Api.ExceptionHandler;
 using LibraryManagement.Application;
-using LibraryManagement.Infrastructure.Persistence;
-using Microsoft.EntityFrameworkCore;
+using LibraryManagement.Infrastructure;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
 using System.Text.Json.Serialization;
@@ -16,12 +15,10 @@ builder.Services.Configure<ReturnDaysConfig>(
 
 builder.Services.AddExceptionHandler<ApiExceptionHandler>();
 builder.Services.AddProblemDetails();
-var connectionString = builder.Configuration.GetConnectionString("LibraryDb");
 
-//builder.Services.AddDbContext<LibraryManagementDbContext>(o => o.UseInMemoryDatabase("LibraryManagementDb"));
-builder.Services.AddDbContext<LibraryManagementDbContext>(o => o.UseSqlServer(connectionString));
-
-builder.Services.AddApplication();
+builder.Services
+    .AddApplication()
+    .AddInfrastructure(builder.Configuration);
 
 builder.Services.Configure<Microsoft.AspNetCore.Http.Json.JsonOptions>(options => options.SerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 
