@@ -1,4 +1,6 @@
-﻿using LibraryManagement.Application.Commands.Books.Insert;
+﻿using FluentValidation;
+using FluentValidation.AspNetCore;
+using LibraryManagement.Application.Commands.Books.Insert;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace LibraryManagement.Application
@@ -7,7 +9,9 @@ namespace LibraryManagement.Application
     {
         public static IServiceCollection AddApplication(this IServiceCollection services)
         {
-            services.AddHandlers();
+            services.AddHandlers()
+            .AddValidation();
+
             return services;
         }
 
@@ -16,6 +20,14 @@ namespace LibraryManagement.Application
             services.AddMediatR(config =>
                 config.RegisterServicesFromAssemblyContaining<InsertBookCommand>()
             );
+
+            return services;
+        }
+
+        public static IServiceCollection AddValidation(this IServiceCollection services)
+        {
+            services.AddFluentValidationAutoValidation()
+                .AddValidatorsFromAssemblyContaining<InsertBookCommand>();
 
             return services;
         }

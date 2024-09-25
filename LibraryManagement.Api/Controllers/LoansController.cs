@@ -5,7 +5,6 @@ using LibraryManagement.Application.Queries.Loans.GetAll;
 using LibraryManagement.Application.Queries.Loans.GetAllUserLoan;
 using LibraryManagement.Application.Queries.Loans.GetById;
 using LibraryManagement.Application.Queries.Loans.GetLoanByBook;
-using LibraryManagement.Application.Services;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
