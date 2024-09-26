@@ -4,6 +4,7 @@ using LibraryManagement.Infrastructure.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System.Diagnostics;
 
 namespace LibraryManagement.Infrastructure
 {
@@ -12,6 +13,7 @@ namespace LibraryManagement.Infrastructure
         public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
             services
+                .AddUnitOfWork()
                 .AddRepositories()
                 .AddData(configuration);
             return services;
@@ -34,6 +36,12 @@ namespace LibraryManagement.Infrastructure
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IBookRepository, BookRepository>();
 
+            return services;
+        }
+
+        public static IServiceCollection AddUnitOfWork(this IServiceCollection services) 
+        {
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
             return services;
         }
 

@@ -7,34 +7,34 @@ namespace LibraryManagement.Infrastructure.Persistence.Repositories
 {
     public class BookRepository : IBookRepository
     {
-        private LibraryManagementDbContext _context;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public BookRepository(LibraryManagementDbContext context)
+        public BookRepository(IUnitOfWork unitOfWork)
         {
-            _context = context;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<int> Add(Book book)
         {
-            await _context.Books.AddAsync(book);
-            await _context.SaveChangesAsync();
+            await _unitOfWork.Books.Add(book);
+            await _unitOfWork.CompleteAsync();
 
             return book.Id;
         }
 
         public async Task<bool> Exists(int id)
         {
-            return await _context.Books.AnyAsync(c => c.Id ==id && !c.IsDeleted);
+            return await _unitOfWork.Books.Any(c => c.Id ==id && !c.IsDeleted);
         }
 
         public async Task<Book?> GetByIdAndHasQuantity(int id)
         {
-            return await _context.Books.SingleOrDefaultAsync(c => c.Id == id && !c.IsDeleted && c.Quantity > 0);
+            return await _unitOfWork.Books.SingleOrDefaultAsync(c => c.Id == id && !c.IsDeleted && c.Quantity > 0);
         }
 
         public async Task<List<Book>> GetAll()
         {
-            return await _context.Books.Where(c => !c.IsDeleted).ToListAsync();
+            return await _unitOfWork.Books.Where(c => !c.IsDeleted).ToListAsync();
         }
 
         public async Task<Book?> GetById(int id)
