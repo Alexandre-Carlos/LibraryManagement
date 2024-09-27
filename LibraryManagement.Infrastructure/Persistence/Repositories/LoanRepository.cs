@@ -8,16 +8,18 @@ namespace LibraryManagement.Infrastructure.Persistence.Repositories
     public class LoanRepository : ILoanRepository
     {
         private readonly LibraryManagementDbContext _context;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public LoanRepository(LibraryManagementDbContext context)
+        public LoanRepository(LibraryManagementDbContext context, IUnitOfWork unitOfWork)
         {
             _context = context;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<int> Add(Loan loan)
         {
             await _context.Loans.AddAsync(loan);
-            await _context.SaveChangesAsync();
+            await _unitOfWork.CompleteAsync();
 
             return loan.Id;
         }
@@ -62,7 +64,7 @@ namespace LibraryManagement.Infrastructure.Persistence.Repositories
         public async Task Update(Loan loan)
         {
             _context.Loans.Update(loan);
-            await _context.SaveChangesAsync();
+            await _unitOfWork.CompleteAsync();
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using LibraryManagement.Application.Dtos;
 using LibraryManagement.Core.Repositories;
+using LibraryManagement.Infrastructure.Persistence;
 using MediatR;
 
 namespace LibraryManagement.Application.Commands.Loans.ReturnLoan
@@ -9,16 +10,23 @@ namespace LibraryManagement.Application.Commands.Loans.ReturnLoan
         private readonly ILoanRepository _repository;
         private readonly IUserRepository _userRepository;
         private readonly IBookRepository _bookRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public ReturnLoanHandler(ILoanRepository repository, IUserRepository userRepository, IBookRepository bookRepository)
+        public ReturnLoanHandler(ILoanRepository repository, 
+            IUserRepository userRepository, 
+            IBookRepository bookRepository, 
+            IUnitOfWork unitOfWork)
         {
             _repository = repository;
             _userRepository = userRepository;
             _bookRepository = bookRepository;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<ResultViewModel<string>> Handle(ReturnLoanCommand request, CancellationToken cancellationToken)
         {
+            await _unitOfWork.BeginTransactionAsync();
+
             var existsUser = await _userRepository.Exist(request.IdUser);
             if (!existsUser) return ResultViewModel<string>.Error("Usuário não encontrado");
 
@@ -36,8 +44,14 @@ namespace LibraryManagement.Application.Commands.Loans.ReturnLoan
 
             await _bookRepository.Update(book);
 
+           // throw new ArgumentException("Erro na gravação do livro.");
+
             await _repository.Update(loan);
-            
+
+            //throw new ArgumentException("Erro na gravação do emprestimo.");
+
+            await _unitOfWork.CommitAsync(); 
+
             return ResultViewModel<string>.Sucess("Devolução realizada com sucesso!");
         }
     }

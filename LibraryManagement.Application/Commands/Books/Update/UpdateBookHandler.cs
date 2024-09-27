@@ -1,5 +1,6 @@
 ﻿using LibraryManagement.Application.Dtos;
 using LibraryManagement.Core.Repositories;
+using LibraryManagement.Infrastructure.Persistence;
 using MediatR;
 
 namespace LibraryManagement.Application.Commands.Books.Update
@@ -7,10 +8,12 @@ namespace LibraryManagement.Application.Commands.Books.Update
     public class UpdateBookHandler : IRequestHandler<UpdateBookCommand, ResultViewModel>
     {
         private readonly IBookRepository _repository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public UpdateBookHandler(IBookRepository repository)
+        public UpdateBookHandler(IBookRepository repository, IUnitOfWork unitOfWork)
         {
             _repository = repository;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<ResultViewModel> Handle(UpdateBookCommand request, CancellationToken cancellationToken)
@@ -20,7 +23,11 @@ namespace LibraryManagement.Application.Commands.Books.Update
 
             book.Update(request.Title, request.Author, request.Isbn, request.YearPublished);
 
-            await _repository.Update(book);
+            await _unitOfWork.BeginTransactionAsync();
+
+            await _repository.Update(book);                      
+
+            await _unitOfWork.CommitAsync();
 
             return ResultViewModel.Sucess();
         }

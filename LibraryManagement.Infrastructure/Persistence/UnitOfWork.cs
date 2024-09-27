@@ -1,27 +1,40 @@
-﻿using LibraryManagement.Core.Repositories;
+﻿using Microsoft.EntityFrameworkCore.Storage;
 
 namespace LibraryManagement.Infrastructure.Persistence
 {
-    public class UnitOfWork : IUnitOfWork
+    public class UnitOfWork : IUnitOfWork, IDisposable
     {
         private readonly LibraryManagementDbContext _context;
+        private IDbContextTransaction _transaction;
+
         public UnitOfWork(
-            LibraryManagementDbContext context,
-            IBookRepository books,
-            IUserRepository users,
-            ILoanRepository loans
-            )
+            LibraryManagementDbContext context
+             )
         {
             _context = context;
-            Books = books;
-            Users = users;
-            Loans = loans;
+
         }
-        public IBookRepository Books { get; }
 
-        public IUserRepository Users { get; }
 
-        public ILoanRepository Loans { get; }
+        public async Task BeginTransactionAsync()
+        {
+            _transaction = await _context.Database.BeginTransactionAsync();
+
+        }
+
+        public async Task CommitAsync()
+        {
+            try
+            {
+                await _transaction.CommitAsync();
+            }
+            catch (Exception ex)
+            {
+                await _transaction.RollbackAsync();
+                throw ex;
+            }
+            
+        }
 
         public async Task<int> CompleteAsync()
         {

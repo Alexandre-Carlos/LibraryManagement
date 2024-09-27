@@ -1,13 +1,13 @@
 ﻿using LibraryManagement.Core.Repositories;
+using System.Diagnostics;
 
 namespace LibraryManagement.Infrastructure.Persistence
 {
     public interface IUnitOfWork
     {
-        IBookRepository Books { get; }
-        IUserRepository Users { get; }
-        ILoanRepository Loans { get; }
         Task<int> CompleteAsync();
+        Task BeginTransactionAsync();
+        Task CommitAsync();
 
     }
 }

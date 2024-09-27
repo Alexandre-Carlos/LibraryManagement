@@ -7,16 +7,18 @@ namespace LibraryManagement.Infrastructure.Persistence.Repositories
     public class UserRepository : IUserRepository
     {
         private readonly LibraryManagementDbContext _context;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public UserRepository(LibraryManagementDbContext context)
+        public UserRepository(LibraryManagementDbContext context, IUnitOfWork unitOfWork)
         {
             _context = context;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<int> Add(User user)
         {
             await _context.Users.AddAsync(user);
-            await _context.SaveChangesAsync();
+            await _unitOfWork.CompleteAsync();
 
             return user.Id;
         }
@@ -39,7 +41,7 @@ namespace LibraryManagement.Infrastructure.Persistence.Repositories
         public async Task Update(User user)
         {
             _context.Users.Update(user);
-            await _context.SaveChangesAsync();
+            await _unitOfWork.CompleteAsync();
         }
     }
 }
