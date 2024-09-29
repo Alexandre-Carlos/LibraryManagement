@@ -40,7 +40,7 @@ namespace LibraryManagement.Application.Commands.Loans.ReturnLoan
                 return ResultViewModel<string>.Error("Dados para devolução do emprestimo incorretos!");
 
             loan.SetReturnDate();
-            book.SetDevolutionQuantity();
+            book.SetIncrementQuantity();
 
             await _bookRepository.Update(book);
 

@@ -44,7 +44,7 @@ namespace LibraryManagement.Application.Commands.Loans.Insert
 
                 var loan = request.ToEntity(_returnDays);
 
-                book.SetLoanQuantity();
+                book.SetDecrementQuantity();
 
                 await _bookRepository.Update(book);
 
