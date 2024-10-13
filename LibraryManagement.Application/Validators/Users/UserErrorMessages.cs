@@ -7,5 +7,6 @@
 
         public static string EmailEmpty = "Email tem que ser preenchido!";
         public static string EmailNotStandard = "Email não deve conter números ou hífens para separadores!";
+        public static string EmailMaximuLength = "O Nome pode ter no máximo 100 caracteres";
     }
 }
