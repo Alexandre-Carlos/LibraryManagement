@@ -26,7 +26,7 @@ namespace LibraryManagement.Application.Commands.Users.Delete
 
             if (user is null) return ResultViewModel.Error("Usuário não encontrado");
 
-            var loans = await _loanRepository.Exists(request.Id);
+            var loans = await _loanRepository.ExistsUser(request.Id);
 
             if (loans)
                 return ResultViewModel.Error("Usuário ainda tem emprestimos ativos, não é possível realizar a operação!");

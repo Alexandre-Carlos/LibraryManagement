@@ -31,39 +31,28 @@ namespace LibraryManagement.Application.Commands.Loans.Insert
 
         public async Task<ResultViewModel<int>> Handle(InsertLoanCommand request, CancellationToken cancellationToken)
         {
-            try
-            {
-                await _unitOfWork.BeginTransactionAsync();
-                var book = await _bookRepository.GetByIdAndHasQuantity(request.IdBook);
+            await _unitOfWork.BeginTransactionAsync();
+            var book = await _bookRepository.GetByIdAndHasQuantity(request.IdBook);
 
-                if (book is null) return ResultViewModel<int>.Error("Livro não encontrado ou não disponível para emprestimo!");
+            if (book is null) return ResultViewModel<int>.Error("Livro não encontrado ou não disponível para emprestimo!");
 
-                var user = await _userRepository.GetById(request.IdUser);
+            var user = await _userRepository.GetById(request.IdUser);
 
-                if (user is null) return ResultViewModel<int>.Error("Usuário não encontrado");
+            if (user is null) return ResultViewModel<int>.Error("Usuário não encontrado");
 
-                var loan = request.ToEntity(_returnDays);
+            var loan = request.ToEntity(_returnDays);
 
-                book.SetDecrementQuantity();
+            book.SetDecrementQuantity();
 
-                await _bookRepository.Update(book);
+            await _bookRepository.Update(book);
 
-                //throw new ArgumentException("Erro na gravação do livro.");
+            await _repository.Add(loan);
 
-                await _repository.Add(loan);
+            var response = LoanResponseDto.FromEntity(loan);
 
-                //throw new ArgumentException("Erro na gravação do emprestimo.");
+            await _unitOfWork.CommitAsync();
 
-                var response = LoanResponseDto.FromEntity(loan);
-
-                await _unitOfWork.CommitAsync();
-
-                return ResultViewModel<int>.Sucess(response.Id);
-            }
-            catch (Exception)
-            {
-                throw;
-            }
+            return ResultViewModel<int>.Sucess(response.Id);
         }
     }
 }

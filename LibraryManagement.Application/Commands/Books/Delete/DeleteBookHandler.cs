@@ -20,15 +20,17 @@ namespace LibraryManagement.Application.Commands.Books.Delete
 
         public async Task<ResultViewModel> Handle(DeleteBookCommand request, CancellationToken cancellationToken)
         {
-            await _unitOfWork.BeginTransactionAsync();
 
             var book = await _repository.GetById(request.Id);
             if (book is null) return ResultViewModel.Error("Livro não encontrado!");
 
-            var loan = await _loanRepository.Exists(request.Id);
+            var loan = await _loanRepository.ExistsBook(request.Id);
 
             if (loan)
                 return ResultViewModel.Error("Usuário ainda tem emprestimos ativos, não é possível realizar a operação!");
+
+
+            await _unitOfWork.BeginTransactionAsync();
 
             book.SetAsDeleted();
 

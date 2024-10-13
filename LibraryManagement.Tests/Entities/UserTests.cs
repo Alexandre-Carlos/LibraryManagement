@@ -21,6 +21,20 @@ namespace LibraryManagement.Tests.Entities
         }
 
         [Fact]
+        public void Update_UserConstructorDataIsOk_Success()
+        {
+            var name = "Alexandre C";
+            var email = "emailcorreto@email.com.br";
+
+            var user = new User("Alexandre", "emailerrado@email.com.br");
+
+            user.Update(name, email);
+
+            user.Name.Should().BeEquivalentTo(name);
+            user.Email.Should().BeEquivalentTo(email);
+        }
+
+        [Fact]
         public void Change_UserEmail_Success()
         {
             var email = "emailcorreto@email.com.br";

@@ -18,6 +18,24 @@ namespace LibraryManagement.Tests.Builders.Entities
             );
         }
 
+        public LoanBuilder WithId(int id)
+        {
+            instance.RuleFor(x => x.Id, id);
+            return this;
+        }
+
+        public LoanBuilder WithIdUser(int idUser)
+        {
+            instance.RuleFor(x => x.IdUser, idUser);
+            return this;
+        }
+
+        public LoanBuilder WithIdBook(int idBook)
+        {
+            instance.RuleFor(x => x.IdBook, idBook);
+            return this;
+        }
+
         public LoanBuilder WithDateOfLoan(DateTime dateOfLoan) 
         {
             instance.RuleFor(l => l.DateOfLoan, dateOfLoan);
@@ -48,6 +66,17 @@ namespace LibraryManagement.Tests.Builders.Entities
             return this;
         }
 
+        public LoanBuilder WithUser(User user)
+        {
+            instance.RuleFor(l => l.User, user);
+            return this;
+        }
+
+        public LoanBuilder WithBook(Book book)
+        {
+            instance.RuleFor(l => l.Book, book);
+            return this;
+        }
 
         public Loan Build() => instance.Generate();
     }

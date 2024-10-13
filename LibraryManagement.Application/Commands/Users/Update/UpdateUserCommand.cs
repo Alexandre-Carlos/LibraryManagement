@@ -9,8 +9,5 @@ namespace LibraryManagement.Application.Commands.Users.Update
         public int Id { get; set; }
         public string Name { get; set; }
         public string Email { get; set; }
-
-
-        public User ToEntity() => new(Name, Email);
     }
 }

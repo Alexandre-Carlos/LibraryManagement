@@ -24,7 +24,12 @@ namespace LibraryManagement.Infrastructure.Persistence.Repositories
             return loan.Id;
         }
 
-        public async Task<bool> Exists(int id)
+        public async Task<bool> ExistsUser(int id)
+        {
+            return await _context.Loans.AnyAsync(l => l.IdUser == id && l.Active);
+        }
+
+        public async Task<bool> ExistsBook(int id)
         {
             return await _context.Loans.AnyAsync(l => l.IdBook == id && l.Active);
         }

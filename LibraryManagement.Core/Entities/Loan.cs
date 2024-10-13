@@ -15,8 +15,8 @@
 
         public int IdUser { get; private set; }
         public int IdBook { get; private set; }
-        public User User { get; set; }
-        public Book Book { get; set; }
+        public User User { get; set; } = new User();
+        public Book Book { get; set; } = new Book();
         public DateTime DateOfLoan { get; private set; }
         public DateTime EndDateLoan { get; private set; }
         public DateTime ReturnDate { get; private set; }

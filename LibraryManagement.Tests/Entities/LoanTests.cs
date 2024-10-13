@@ -15,6 +15,14 @@ namespace LibraryManagement.Tests.Entities
         }
 
         [Fact]
+        public void Create_LoanConstrutorDataIsOk_Success()
+        {
+            var loan = new Loan(1,1,30);
+
+            loan.Should().NotBeNull();
+        }
+
+        [Fact]
         public void Check_LoanIsActive_Success()
         {
             var loan = new LoanBuilder().WithActive(true) .Build();

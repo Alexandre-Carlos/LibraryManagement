@@ -13,6 +13,11 @@ namespace LibraryManagement.Tests.Builders.Entities
            
         }
 
+        public UserBuilder WithId(int id)
+        {
+            instance.RuleFor(x => x.Id, id);
+            return this;
+        }
         public UserBuilder WithName(string name) 
         {
             instance.RuleFor(u => u.Name, name);

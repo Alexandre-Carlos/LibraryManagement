@@ -8,7 +8,8 @@ namespace LibraryManagement.Core.Repositories
         Task Update(Loan loan);
         Task<List<Loan>> GetAll();
         Task<Loan?> GetById(int id);
-        Task<bool> Exists(int id);
+        Task<bool> ExistsBook(int id);
+        Task<bool> ExistsUser(int id);
         Task<List<Loan>> GetAllUserLoan(int idUser);
         Task<List<Loan>> GetAllBookByUserLoan(int idUser, int idBook);
 

@@ -4,6 +4,10 @@ namespace LibraryManagement.Application.Dtos.Books
 {
     public class BookResponseDto
     {
+        public BookResponseDto()
+        {
+            
+        }
         public BookResponseDto(int id, string title, string author, string isbn, int yearPublished, int quantity)
         {
             Id = id;

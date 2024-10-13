@@ -31,7 +31,7 @@ namespace LibraryManagement.Api.Controllers
         {
             var response = await _mediator.Send(new GetAllBooksQuery());
 
-            if (!response.IsSucess)
+            if (!response.IsSuccess)
                 return BadRequest(response);
 
             return Ok(response);
@@ -49,7 +49,7 @@ namespace LibraryManagement.Api.Controllers
         {
             var response = await _mediator.Send(new GetBookByIdQuery(id));
 
-            if (!response.IsSucess)
+            if (!response.IsSuccess)
                 return BadRequest(response);
 
             return Ok(response);
@@ -67,7 +67,7 @@ namespace LibraryManagement.Api.Controllers
         {
             var response = await _mediator.Send(request);
 
-            if (!response.IsSucess)
+            if (!response.IsSuccess)
                 return BadRequest(response);
 
             return CreatedAtAction(nameof(GetById),new { id = response.Data }, response);
@@ -86,7 +86,7 @@ namespace LibraryManagement.Api.Controllers
         {
             var response = await _mediator.Send(request);
 
-            if (!response.IsSucess)
+            if (!response.IsSuccess)
                return BadRequest(response);
 
             return NoContent();
@@ -105,7 +105,7 @@ namespace LibraryManagement.Api.Controllers
         {
             var response = await _mediator.Send(new DeleteBookCommand(id));
 
-            if (!response.IsSucess)
+            if (!response.IsSuccess)
                 return BadRequest(response);
 
             return NoContent();

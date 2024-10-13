@@ -1,4 +1,5 @@
 using FluentAssertions;
+using LibraryManagement.Core.Entities;
 using LibraryManagement.Tests.Builders.Entities;
 
 namespace LibraryManagement.Tests.Entities
@@ -16,6 +17,62 @@ namespace LibraryManagement.Tests.Entities
             
 
             var book = new BookBuilder().Build();
+            //Act
+
+            book.Update(title, author, isbn, yearPublished);
+
+            //Assert
+
+            Assert.Equal(title, book.Title);
+            Assert.Equal(author, book.Author);
+            Assert.Equal(isbn, book.Isbn);
+            Assert.Equal(yearPublished, book.YearPublished);
+
+            book.Title.Should().BeEquivalentTo(title);
+            book.Author.Should().BeEquivalentTo(author);
+            book.Isbn.Should().BeEquivalentTo(isbn);
+            book.YearPublished.Should().Be(yearPublished);
+        }
+
+        [Fact]
+        public void Update_BookConstructorDataIsOk_Success()
+        {
+            //Arrange
+            var title = "Design Patterns";
+            var author = "Eric Evans";
+            var isbn = "1252845895213";
+            var yearPublished = 2015;
+
+
+            var book = new Book("Design", "Eric", "1252845895214", 2000);
+            //Act
+
+            book.Update(title, author, isbn, yearPublished);
+
+            //Assert
+
+            Assert.Equal(title, book.Title);
+            Assert.Equal(author, book.Author);
+            Assert.Equal(isbn, book.Isbn);
+            Assert.Equal(yearPublished, book.YearPublished);
+
+            book.Title.Should().BeEquivalentTo(title);
+            book.Author.Should().BeEquivalentTo(author);
+            book.Isbn.Should().BeEquivalentTo(isbn);
+            book.YearPublished.Should().Be(yearPublished);
+        }
+
+        [Fact]
+        public void Update_BookConstructorQuantityDataIsOk_Success()
+        {
+            //Arrange
+            var title = "Design Patterns";
+            var author = "Eric Evans";
+            var isbn = "1252845895213";
+            var yearPublished = 2015;
+
+
+            var book = new Book("Design", "Eric", "1252845895214", 2000, 1);
             //Act
 
             book.Update(title, author, isbn, yearPublished);
@@ -82,8 +139,8 @@ namespace LibraryManagement.Tests.Entities
         [Fact]
         public void Update_BookQuantityDecrementIsNotOk_ThrowExeception()
         {
-            var book = new BookBuilder().Build();
-
+            var book = new BookBuilder().WithQuantity(1).Build();
+     
             book.SetDecrementQuantity();
 
             var exception = Assert.Throws<InvalidOperationException>(() =>

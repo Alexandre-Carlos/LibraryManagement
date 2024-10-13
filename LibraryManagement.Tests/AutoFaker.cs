@@ -8,7 +8,10 @@ namespace LibraryManagement.Tests
         {
             RuleForType(typeof(Guid), faker => faker.Random.Guid())
             .RuleForType(typeof(string), faker => faker.Random.Word())
-            .RuleForType(typeof(DateTime), faker => faker.Date.Past());
+            .RuleForType(typeof(DateTime), faker => faker.Date.Past())
+            .RuleForType(typeof(bool), faker => faker.Random.Bool())
+            .RuleForType(typeof(int), faker => faker.Random.Int(1, 500));
+            
         }
     }
 }

@@ -11,8 +11,5 @@ namespace LibraryManagement.Application.Commands.Books.Update
         public string Author { get; set; }
         public string Isbn { get; set; }
         public int YearPublished { get; set; }
-
-        public Book ToEntity()
-            => new(Title, Author, Isbn, YearPublished);
     }
 }

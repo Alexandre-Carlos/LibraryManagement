@@ -9,9 +9,14 @@ namespace LibraryManagement.Tests.Builders.Entities
 
         public BookBuilder()
         {
-            instance = new AutoFaker<Book>();
+            instance = new AutoFaker<Book>();      
         }
 
+        public BookBuilder WithId(int id)
+        {
+            instance.RuleFor(x => x.Id, id);
+            return this;
+        }
         public BookBuilder WithTitle(string title) 
         {
             instance.RuleFor(b => b.Title, title);
@@ -39,6 +44,12 @@ namespace LibraryManagement.Tests.Builders.Entities
         public BookBuilder WithYearPublished(int yearPublished)
         {
             instance.RuleFor(b => b.YearPublished, yearPublished);
+            return this;
+        }
+
+        public BookBuilder WithLoans(List<Loan> loan)
+        {
+            instance.RuleFor(b => b.Loans, loan);
             return this;
         }
         public Book Build() => instance.Generate();
