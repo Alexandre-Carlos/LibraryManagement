@@ -13,13 +13,14 @@ namespace LibraryManagement.Infrastructure.Persistence.EntityConfig
             builder.Property(x => x.Title).IsRequired().HasMaxLength(100);
             builder.Property(x => x.Author).IsRequired().HasMaxLength(100);
             builder.Property(x => x.Isbn).IsRequired().HasMaxLength(20);
+            builder.Property(x => x.Quantity).HasColumnType("int");
+
             builder.Property(x => x.CreatedAt).HasColumnType("date");
 
-
             builder.HasData(
-                new Book("Código Limpo: Habilidades Práticas do Agile Software", "Robert C. Martin", "978-8576082675", 2009, 5),
-                new Book("Arquitetura Limpa: o Guia do Artesão Para Estrutura e Design de Software", "Robert C. Martin", "978-8550804606", 2019, 3),
-                new Book("Entendendo Algoritmos: Um Guia Ilustrado Para Programadores e Outros Curiosos", " Aditya Y. Bhargava", "978-8575225639", 2019, 8)
+                new { Id = 1, Title = "Código Limpo: Habilidades Práticas do Agile Software", Author = "Robert C. Martin", Isbn = "978-8576082675", YearPublished = 2009, Quantity = 5, IsDeleted = false, CreatedAt = DateTime.Now},
+                new { Id = 2, Title = "Arquitetura Limpa: o Guia do Artesão Para Estrutura e Design de Software", Author = "Robert C. Martin", Isbn = "978-8550804606", YearPublished = 2019, Quantity = 3, IsDeleted = false, CreatedAt = DateTime.Now},
+                new { Id = 3, Title = "Entendendo Algoritmos: Um Guia Ilustrado Para Programadores e Outros Curiosos", Author = " Aditya Y. Bhargava", Isbn = "978-8575225639", YearPublished = 2019, Quantity = 8, IsDeleted = false, CreatedAt = DateTime.Now}
             );
         }
     }

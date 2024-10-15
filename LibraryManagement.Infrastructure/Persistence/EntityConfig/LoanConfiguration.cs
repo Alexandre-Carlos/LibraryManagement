@@ -11,6 +11,12 @@ namespace LibraryManagement.Infrastructure.Persistence.EntityConfig
             builder.ToTable("Loans");
             builder.HasKey(l => l.Id);
 
+            builder.Property(x => x.DateOfLoan).HasColumnType("date");
+            builder.Property(x => x.EndDateLoan).HasColumnType("date");
+            builder.Property(x => x.ReturnDate).HasColumnType("date");
+            builder.Property(x => x.CreatedAt).HasColumnType("date");
+            builder.Property(x => x.DaysOfDelay).HasColumnType("int");
+
             builder.HasOne(l => l.User)
                    .WithMany(u => u.Loans)
                    .HasForeignKey(l => l.IdUser)

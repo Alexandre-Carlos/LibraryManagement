@@ -19,8 +19,8 @@ namespace LibraryManagement.Infrastructure.Persistence.EntityConfig
                    .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasData(
-                new User("Cliente1","cliente1@teste.com.br" ),
-                new User("cliente2","cliente2@teste.com.br" )
+                new {Id = 1, Name = "Cliente1", Email = "cliente1@teste.com.br", CreatedAt = DateTime.Now, IsDeleted = false },
+                new {Id = 2, Name = "cliente2", Email = "cliente2@teste.com.br", CreatedAt = DateTime.Now, IsDeleted = false }
             );
 
         }
