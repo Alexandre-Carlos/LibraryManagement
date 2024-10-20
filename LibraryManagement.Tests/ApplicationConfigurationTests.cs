@@ -1,4 +1,5 @@
 ﻿using LibraryManagement.Application.Commands.Books.Insert;
+using LibraryManagement.Application.Configuration;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;

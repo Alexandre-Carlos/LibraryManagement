@@ -8,7 +8,14 @@
   <PropertyGroup>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
 	  <NoWarn>$(NoWarn);1591</NoWarn>
+	  <UserSecretsId>6331b878-6434-46b7-9487-953eb0947d39</UserSecretsId>
   </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="Configuration\**" />
+    <Content Remove="Configuration\**" />
+    <EmbeddedResource Remove="Configuration\**" />
+    <None Remove="Configuration\**" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="MediatR" Version="12.4.1" />
@@ -23,8 +30,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\LibraryManagement.Application\LibraryManagement.Application.csproj" />
-    <ProjectReference Include="..\LibraryManagement.Core\LibraryManagement.Core.csproj" />
-    <ProjectReference Include="..\LibraryManagement.Infrastructure\LibraryManagement.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

@@ -5,7 +5,7 @@ namespace LibraryManagement.Application.Dtos.Loans
     public class LoanResponseDto
     {
         public LoanResponseDto() {}
-        public LoanResponseDto(int id, int idUser, string fullNameUser, int idBook, string titleBook, 
+        public LoanResponseDto(int id, int? idUser, string fullNameUser, int? idBook, string titleBook, 
             DateTime dateOfLoan, DateTime endDateLoan)
         {
             Id = id;
@@ -19,9 +19,9 @@ namespace LibraryManagement.Application.Dtos.Loans
         }
 
         public int Id { get; private set; }
-        public int IdUser { get; private set; }
+        public int? IdUser { get; private set; }
         public string FullNameUser { get; private set; }
-        public int IdBook { get; private set; }
+        public int? IdBook { get; private set; }
         public string TitleBook { get; private set; }
         public DateTime DateOfLoan { get; private set; }
         public DateTime EndDateLoan { get; private set; }
@@ -29,7 +29,7 @@ namespace LibraryManagement.Application.Dtos.Loans
         
         public static LoanResponseDto FromEntity(Loan entity)
         {
-            return new(entity.Id, entity.User.Id, entity.User.Name, entity.Book.Id, entity.Book.Title, entity.DateOfLoan, entity.EndDateLoan);
+            return new(entity.Id, entity.User?.Id, entity.User?.Name, entity.Book?.Id, entity.Book?.Title, entity.DateOfLoan, entity.EndDateLoan);
         }
 
 

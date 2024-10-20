@@ -1,4 +1,5 @@
 ﻿using LibraryManagement.Application.Commands.Loans.Insert;
+using LibraryManagement.Application.Commands.Loans.Notify;
 using LibraryManagement.Application.Commands.Loans.ReturnLoan;
 using LibraryManagement.Application.Dtos.Loans;
 using LibraryManagement.Application.Queries.Loans.GetAll;

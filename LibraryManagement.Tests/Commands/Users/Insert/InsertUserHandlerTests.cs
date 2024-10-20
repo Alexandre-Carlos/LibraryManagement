@@ -3,7 +3,6 @@ using LibraryManagement.Application.Commands.Users.Insert;
 using LibraryManagement.Application.Dtos.Users;
 using LibraryManagement.Core.Entities;
 using LibraryManagement.Core.Repositories;
-using LibraryManagement.Infrastructure.Persistence;
 using LibraryManagement.Tests.Builders.Command.Users.Insert;
 using LibraryManagement.Tests.Builders.Entities;
 using Moq;

@@ -4,11 +4,7 @@ using LibraryManagement.Core.Repositories;
 using LibraryManagement.Infrastructure.Persistence;
 using LibraryManagement.Infrastructure.Persistence.Repositories;
 using LibraryManagement.Tests.Builders.Entities;
-using Microsoft.EntityFrameworkCore;
 using Moq;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
 
 namespace LibraryManagement.Tests.Repositories
 {

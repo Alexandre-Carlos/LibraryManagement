@@ -1,5 +1,4 @@
 ﻿using LibraryManagement.Application.Dtos;
-using LibraryManagement.Core.Entities;
 using MediatR;
 
 namespace LibraryManagement.Application.Commands.Books.Update

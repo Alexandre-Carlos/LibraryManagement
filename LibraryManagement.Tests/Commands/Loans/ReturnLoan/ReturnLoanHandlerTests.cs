@@ -2,7 +2,6 @@
 using LibraryManagement.Application.Commands.Loans.ReturnLoan;
 using LibraryManagement.Core.Entities;
 using LibraryManagement.Core.Repositories;
-using LibraryManagement.Infrastructure.Persistence;
 using LibraryManagement.Tests.Builders.Command.Loans.ReturnLoan;
 using LibraryManagement.Tests.Builders.Entities;
 using Moq;

@@ -43,6 +43,5 @@ namespace LibraryManagement.Infrastructure
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             return services;
         }
-
     }
 }

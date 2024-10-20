@@ -3,7 +3,6 @@ using LibraryManagement.Application.Commands.Books.Insert;
 using LibraryManagement.Application.Dtos.Books;
 using LibraryManagement.Core.Entities;
 using LibraryManagement.Core.Repositories;
-using LibraryManagement.Infrastructure.Persistence;
 using LibraryManagement.Tests.Builders.Command.Books.Insert;
 using Moq;
 using Moq.AutoMock;

@@ -14,8 +14,12 @@ namespace LibraryManagement.Infrastructure.Persistence.EntityConfig
             builder.Property(x => x.Author).IsRequired().HasMaxLength(100);
             builder.Property(x => x.Isbn).IsRequired().HasMaxLength(20);
             builder.Property(x => x.Quantity).HasColumnType("int");
-
             builder.Property(x => x.CreatedAt).HasColumnType("date");
+
+            builder.HasMany(u => u.Loans)
+               .WithOne(x => x.Book)
+               .HasForeignKey(x => x.IdBook)
+               .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasData(
                 new { Id = 1, Title = "Código Limpo: Habilidades Práticas do Agile Software", Author = "Robert C. Martin", Isbn = "978-8576082675", YearPublished = 2009, Quantity = 5, IsDeleted = false, CreatedAt = DateTime.Now},

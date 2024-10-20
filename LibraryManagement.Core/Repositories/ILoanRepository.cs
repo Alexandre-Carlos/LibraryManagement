@@ -12,6 +12,6 @@ namespace LibraryManagement.Core.Repositories
         Task<bool> ExistsUser(int id);
         Task<List<Loan>> GetAllUserLoan(int idUser);
         Task<List<Loan>> GetAllBookByUserLoan(int idUser, int idBook);
-
+        Task<List<Loan>> GetAllLoanDelay(int returnDays);
     }
 }

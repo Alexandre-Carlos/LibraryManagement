@@ -1,10 +1,8 @@
-﻿using LibraryManagement.Api.Configuration;
+﻿using LibraryManagement.Application.Configuration;
 using LibraryManagement.Application.Dtos;
 using LibraryManagement.Application.Dtos.Loans;
 using LibraryManagement.Core.Repositories;
-using LibraryManagement.Infrastructure.Persistence;
 using MediatR;
-using Microsoft.Extensions.Options;
 
 namespace LibraryManagement.Application.Commands.Loans.Insert
 {
@@ -19,13 +17,13 @@ namespace LibraryManagement.Application.Commands.Loans.Insert
         public InsertLoanHandler(ILoanRepository repository, 
             IBookRepository bookRepository, 
             IUserRepository userRepository, 
-            IOptions<ReturnDaysConfig> options, 
-            IUnitOfWork unitOfWork)
+            IUnitOfWork unitOfWork,
+            ApplicationConfig appConfig)
         {
             _repository = repository;
             _bookRepository = bookRepository;
             _userRepository = userRepository;
-            _returnDays = options.Value.Default;
+            _returnDays = appConfig.ReturnDaysConfig.Default;
             _unitOfWork = unitOfWork;
         }
 

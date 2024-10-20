@@ -2,8 +2,6 @@
 using LibraryManagement.Application.Commands.Users.Delete;
 using LibraryManagement.Core.Entities;
 using LibraryManagement.Core.Repositories;
-using LibraryManagement.Infrastructure.Persistence;
-using LibraryManagement.Infrastructure.Persistence.Repositories;
 using LibraryManagement.Tests.Builders.Entities;
 using Moq;
 

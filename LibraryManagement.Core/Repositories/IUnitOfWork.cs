@@ -1,7 +1,4 @@
-﻿using LibraryManagement.Core.Repositories;
-using System.Diagnostics;
-
-namespace LibraryManagement.Infrastructure.Persistence
+﻿namespace LibraryManagement.Core.Repositories
 {
     public interface IUnitOfWork
     {

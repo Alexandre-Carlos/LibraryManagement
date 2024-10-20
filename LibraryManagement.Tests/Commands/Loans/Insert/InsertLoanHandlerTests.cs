@@ -1,13 +1,13 @@
 ﻿using FluentAssertions;
-using LibraryManagement.Api.Configuration;
 using LibraryManagement.Application.Commands.Loans.Insert;
+using LibraryManagement.Application.Configuration;
 using LibraryManagement.Application.Dtos.Loans;
 using LibraryManagement.Core.Entities;
 using LibraryManagement.Core.Repositories;
-using LibraryManagement.Infrastructure.Persistence;
 using LibraryManagement.Tests.Builders.Command.Loans.Insert;
 using LibraryManagement.Tests.Builders.Entities;
 using Microsoft.Extensions.Options;
+using Microsoft.Identity.Client;
 using Moq;
 
 namespace LibraryManagement.Tests.Commands.Loans.Insert
@@ -18,8 +18,8 @@ namespace LibraryManagement.Tests.Commands.Loans.Insert
         private readonly Mock<IBookRepository> _bookRepository;
         private readonly Mock<IUserRepository> _userRepository;
         private readonly Mock<IUnitOfWork> _unitOfWork;
-        private readonly int _returnDays = 30;
-        private readonly IOptions<ReturnDaysConfig> _options;
+        private readonly ReturnDaysConfig _returnDays = new ReturnDaysConfig { Default = 30 };
+        private ApplicationConfig _appConfig;
 
         private readonly IOptions<ReturnDaysConfig> options = Options.Create<ReturnDaysConfig>(new ReturnDaysConfig());
 
@@ -29,7 +29,7 @@ namespace LibraryManagement.Tests.Commands.Loans.Insert
             _repository = new Mock<ILoanRepository>();
             _userRepository = new Mock<IUserRepository>();
             _unitOfWork = new Mock<IUnitOfWork>();
-            _options = options;
+            _appConfig = new ApplicationConfig { ReturnDaysConfig = _returnDays };
         }
 
         [Fact]
@@ -47,9 +47,9 @@ namespace LibraryManagement.Tests.Commands.Loans.Insert
 
             book.Invoking(b => b.SetDecrementQuantity());
 
-            request.Invoking(c => c.ToEntity(_returnDays));
+            request.Invoking(c => c.ToEntity(_returnDays.Default));
 
-            var resposta = request.ToEntity(_returnDays);
+            var resposta = request.ToEntity(_returnDays.Default);
 
             var loan = new LoanBuilder()
            .WithIdUser(request.IdUser)
@@ -67,7 +67,7 @@ namespace LibraryManagement.Tests.Commands.Loans.Insert
 
             _unitOfWork.Setup(u => u.CommitAsync());
 
-            var response = new InsertLoanHandler(_repository.Object,_bookRepository.Object,_userRepository.Object, _options, _unitOfWork.Object);
+            var response = new InsertLoanHandler(_repository.Object,_bookRepository.Object,_userRepository.Object, _unitOfWork.Object, _appConfig);
 
             var result = await response.Handle(request, new CancellationToken());
 
@@ -82,8 +82,6 @@ namespace LibraryManagement.Tests.Commands.Loans.Insert
             _bookRepository.Verify(r => r.Update(It.IsAny<Book>()), Times.Once);
 
             _repository.Verify(l => l.Add(It.IsAny<Loan>()), Times.Once);
-
-
         }
     }
 }

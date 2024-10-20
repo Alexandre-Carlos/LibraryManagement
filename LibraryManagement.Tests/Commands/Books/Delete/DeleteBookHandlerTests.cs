@@ -2,7 +2,6 @@
 using LibraryManagement.Application.Commands.Books.Delete;
 using LibraryManagement.Core.Entities;
 using LibraryManagement.Core.Repositories;
-using LibraryManagement.Infrastructure.Persistence;
 using LibraryManagement.Tests.Builders.Entities;
 using Moq;
 using Moq.AutoMock;

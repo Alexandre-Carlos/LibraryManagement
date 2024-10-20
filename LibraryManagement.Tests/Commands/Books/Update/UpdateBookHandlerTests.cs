@@ -2,7 +2,6 @@
 using LibraryManagement.Application.Commands.Books.Update;
 using LibraryManagement.Core.Entities;
 using LibraryManagement.Core.Repositories;
-using LibraryManagement.Infrastructure.Persistence;
 using LibraryManagement.Tests.Builders.Command.Books.Update;
 using LibraryManagement.Tests.Builders.Entities;
 using Moq;
