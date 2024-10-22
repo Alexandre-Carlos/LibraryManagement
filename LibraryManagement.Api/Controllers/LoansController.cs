@@ -7,11 +7,13 @@ using LibraryManagement.Application.Queries.Loans.GetAllUserLoan;
 using LibraryManagement.Application.Queries.Loans.GetById;
 using LibraryManagement.Application.Queries.Loans.GetLoanByBook;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LibraryManagement.Api.Controllers
 {
     [ApiController]
+    [Authorize]
     [Route("api/Loans")]
     [Produces("application/json")]
     public class LoansController : ControllerBase

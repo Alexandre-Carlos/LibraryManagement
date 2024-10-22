@@ -5,6 +5,7 @@ using LibraryManagement.Application.Dtos.Users;
 using LibraryManagement.Application.Queries.Users.GetAll;
 using LibraryManagement.Application.Queries.Users.GetById;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LibraryManagement.Api.Controllers
@@ -45,6 +46,7 @@ namespace LibraryManagement.Api.Controllers
         /// <param name="id">Identificador do usuário</param>
         /// <returns></returns>
         [HttpGet("{id}")]
+        [Authorize]
         [ProducesResponseType<UserResponseDto>(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetById(int id)
@@ -63,6 +65,7 @@ namespace LibraryManagement.Api.Controllers
         /// <param name="id">Identificador do usuário</param>
         /// <returns></returns>
         [HttpGet]
+        [Authorize]
         [ProducesResponseType<UserResponseDto>(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetAll()
@@ -83,6 +86,7 @@ namespace LibraryManagement.Api.Controllers
         /// <param name="model">Payload dos dados para alteração</param>
         /// <returns></returns>
         [HttpPut("{id}")]
+        [Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Put(int id, [FromBody] UpdateUserCommand request)
@@ -100,6 +104,7 @@ namespace LibraryManagement.Api.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpDelete]
+        [Authorize]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType<string>(StatusCodes.Status400BadRequest)]
