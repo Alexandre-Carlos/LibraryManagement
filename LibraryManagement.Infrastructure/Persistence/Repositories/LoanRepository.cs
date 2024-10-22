@@ -24,7 +24,12 @@ namespace LibraryManagement.Infrastructure.Persistence.Repositories
             return loan.Id;
         }
 
-        public async Task<bool> Exists(int id)
+        public async Task<bool> ExistsUser(int id)
+        {
+            return await _context.Loans.AnyAsync(l => l.IdUser == id && l.Active);
+        }
+
+        public async Task<bool> ExistsBook(int id)
         {
             return await _context.Loans.AnyAsync(l => l.IdBook == id && l.Active);
         }
@@ -65,6 +70,20 @@ namespace LibraryManagement.Infrastructure.Persistence.Repositories
         {
             _context.Loans.Update(loan);
             await _unitOfWork.CompleteAsync();
+        }
+
+
+        public async Task<List<Loan>> GetAllLoanDelay(int returnDays)
+        {
+            var dataOfLoan = _context.Loans.FirstOrDefault().DateOfLoan.AddDays(returnDays);
+            var existeAtraso = (_context.Loans.FirstOrDefault().DateOfLoan < _context.Loans.FirstOrDefault().DateOfLoan.AddDays(returnDays));
+
+            var loans = _context.Loans
+                .Include(b => b.Book)
+                .Include(l => l.User)
+                .Where(l => l.Active && !l.IsDeleted && (l.DateOfLoan < l.DateOfLoan.AddDays(returnDays)));
+
+            return loans.ToList();
         }
     }
 }

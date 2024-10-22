@@ -1,9 +1,7 @@
 ﻿using LibraryManagement.Application.Dtos;
 using LibraryManagement.Application.Dtos.Loans;
 using LibraryManagement.Core.Repositories;
-using LibraryManagement.Infrastructure.Persistence;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 
 namespace LibraryManagement.Application.Queries.Loans.GetById
 {

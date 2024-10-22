@@ -1,6 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore.Storage;
+﻿using LibraryManagement.Infrastructure.Persistence;
+using Microsoft.EntityFrameworkCore.Storage;
 
-namespace LibraryManagement.Infrastructure.Persistence
+namespace LibraryManagement.Core.Repositories
 {
     public class UnitOfWork : IUnitOfWork, IDisposable
     {

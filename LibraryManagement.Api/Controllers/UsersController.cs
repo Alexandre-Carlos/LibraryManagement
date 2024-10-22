@@ -32,7 +32,7 @@ namespace LibraryManagement.Api.Controllers
         {
             var response = await _mediator.Send(request);
 
-            if (!response.IsSucess)
+            if (!response.IsSuccess)
                 return BadRequest(response);
 
             return CreatedAtAction(nameof(GetById), new { id = response.Data }, response);
@@ -50,7 +50,7 @@ namespace LibraryManagement.Api.Controllers
         public async Task<IActionResult> GetById(int id)
         {
             var response = await _mediator.Send(new GetUserByIdQuery(id));
-            if (!response.IsSucess)
+            if (!response.IsSuccess)
                 return BadRequest(response);
 
             return Ok(response);
@@ -68,7 +68,7 @@ namespace LibraryManagement.Api.Controllers
         public async Task<IActionResult> GetAll()
         {
             var response = await _mediator.Send(new GetAllUserQuery());
-            if (!response.IsSucess)
+            if (!response.IsSuccess)
                 return BadRequest(response);
 
             return Ok(response);
@@ -88,7 +88,7 @@ namespace LibraryManagement.Api.Controllers
         public async Task<IActionResult> Put(int id, [FromBody] UpdateUserCommand request)
         {
             var response = await _mediator.Send(request);
-            if (!response.IsSucess)
+            if (!response.IsSuccess)
                 return BadRequest(response);
 
             return NoContent();
@@ -107,7 +107,7 @@ namespace LibraryManagement.Api.Controllers
         {
             var response = await _mediator.Send(new DeleteUserCommand(id));
 
-            if (!response.IsSucess)
+            if (!response.IsSuccess)
                 return BadRequest(response);
             
 

@@ -1,4 +1,4 @@
-﻿namespace LibraryManagement.Api.Configuration
+﻿namespace LibraryManagement.Application.Configuration
 {
     public class ReturnDaysConfig
     {

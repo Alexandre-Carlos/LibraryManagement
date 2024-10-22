@@ -1,4 +1,5 @@
 ﻿using LibraryManagement.Application.Commands.Loans.Insert;
+using LibraryManagement.Application.Commands.Loans.Notify;
 using LibraryManagement.Application.Commands.Loans.ReturnLoan;
 using LibraryManagement.Application.Dtos.Loans;
 using LibraryManagement.Application.Queries.Loans.GetAll;
@@ -34,7 +35,7 @@ namespace LibraryManagement.Api.Controllers
         {
             var response = await _mediator.Send(request);
 
-            if (!response.IsSucess)
+            if (!response.IsSuccess)
                 return BadRequest(response);
 
             return CreatedAtAction(nameof(GetById), new { id = response.Data }, response);
@@ -51,7 +52,7 @@ namespace LibraryManagement.Api.Controllers
         {
             var response = await _mediator.Send(new GetAllLoanQuery());
 
-            if (!response.IsSucess)
+            if (!response.IsSuccess)
                 return BadRequest(response.Message);
 
             return Ok(response);
@@ -68,7 +69,7 @@ namespace LibraryManagement.Api.Controllers
         {
             var response = await _mediator.Send(new GetLoanByIdQuery(id));
 
-            if (!response.IsSucess)
+            if (!response.IsSuccess)
                 return BadRequest(response);
 
             return Ok(response);
@@ -86,7 +87,7 @@ namespace LibraryManagement.Api.Controllers
         {
             var response = await _mediator.Send(new GetAllUserLoanQuery(idUser));
 
-            if (!response.IsSucess)
+            if (!response.IsSuccess)
                 return BadRequest(response);
 
             return Ok(response);
@@ -105,7 +106,7 @@ namespace LibraryManagement.Api.Controllers
         {
             var response = await _mediator.Send(new GetLoanByBookQuery(idBook, idUser));
 
-            if (!response.IsSucess)
+            if (!response.IsSuccess)
                 return BadRequest(response);
 
             return Ok(response);
@@ -123,7 +124,7 @@ namespace LibraryManagement.Api.Controllers
         {
             var response = await _mediator.Send(request);
 
-            if (!response.IsSucess)
+            if (!response.IsSuccess)
                 return BadRequest(response);
 
             return NoContent();

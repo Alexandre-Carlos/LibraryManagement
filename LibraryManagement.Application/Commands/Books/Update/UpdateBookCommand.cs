@@ -1,5 +1,4 @@
 ﻿using LibraryManagement.Application.Dtos;
-using LibraryManagement.Core.Entities;
 using MediatR;
 
 namespace LibraryManagement.Application.Commands.Books.Update
@@ -11,8 +10,5 @@ namespace LibraryManagement.Application.Commands.Books.Update
         public string Author { get; set; }
         public string Isbn { get; set; }
         public int YearPublished { get; set; }
-
-        public Book ToEntity()
-            => new(Title, Author, Isbn, YearPublished);
     }
 }

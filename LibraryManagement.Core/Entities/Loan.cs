@@ -2,10 +2,8 @@
 {
     public class Loan : BaseEntity
     {
-        public Loan()
-        {
-            
-        }
+        public Loan() {}
+
         public Loan(int idUser, int idBook, int returnDays )
         {
             IdUser = idUser;
@@ -17,8 +15,8 @@
 
         public int IdUser { get; private set; }
         public int IdBook { get; private set; }
-        public User User { get; set; }
-        public Book Book { get; set; }
+        public User? User { get; set; }
+        public Book? Book { get; set; }
         public DateTime DateOfLoan { get; private set; }
         public DateTime EndDateLoan { get; private set; }
         public DateTime ReturnDate { get; private set; }
@@ -27,9 +25,14 @@
 
         public void SetReturnDate()
         {
-            ReturnDate = DateTime.Now;
-            SetDaysOfDelay();
-            SetActive();
+            if (Active)
+            {
+                ReturnDate = DateTime.Now;
+                SetDaysOfDelay();
+                SetActive();
+            }
+            else
+                throw new InvalidOperationException("Emprestimo não está ativo!");
         }
 
         private void SetDaysOfDelay()

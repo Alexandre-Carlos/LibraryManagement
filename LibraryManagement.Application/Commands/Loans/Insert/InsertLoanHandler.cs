@@ -1,10 +1,8 @@
-﻿using LibraryManagement.Api.Configuration;
+﻿using LibraryManagement.Application.Configuration;
 using LibraryManagement.Application.Dtos;
 using LibraryManagement.Application.Dtos.Loans;
 using LibraryManagement.Core.Repositories;
-using LibraryManagement.Infrastructure.Persistence;
 using MediatR;
-using Microsoft.Extensions.Options;
 
 namespace LibraryManagement.Application.Commands.Loans.Insert
 {
@@ -19,51 +17,40 @@ namespace LibraryManagement.Application.Commands.Loans.Insert
         public InsertLoanHandler(ILoanRepository repository, 
             IBookRepository bookRepository, 
             IUserRepository userRepository, 
-            IOptions<ReturnDaysConfig> options, 
-            IUnitOfWork unitOfWork)
+            IUnitOfWork unitOfWork,
+            ApplicationConfig appConfig)
         {
             _repository = repository;
             _bookRepository = bookRepository;
             _userRepository = userRepository;
-            _returnDays = options.Value.Default;
+            _returnDays = appConfig.ReturnDaysConfig.Default;
             _unitOfWork = unitOfWork;
         }
 
         public async Task<ResultViewModel<int>> Handle(InsertLoanCommand request, CancellationToken cancellationToken)
         {
-            try
-            {
-                await _unitOfWork.BeginTransactionAsync();
-                var book = await _bookRepository.GetByIdAndHasQuantity(request.IdBook);
+            await _unitOfWork.BeginTransactionAsync();
+            var book = await _bookRepository.GetByIdAndHasQuantity(request.IdBook);
 
-                if (book is null) return ResultViewModel<int>.Error("Livro não encontrado ou não disponível para emprestimo!");
+            if (book is null) return ResultViewModel<int>.Error("Livro não encontrado ou não disponível para emprestimo!");
 
-                var user = await _userRepository.GetById(request.IdUser);
+            var user = await _userRepository.GetById(request.IdUser);
 
-                if (user is null) return ResultViewModel<int>.Error("Usuário não encontrado");
+            if (user is null) return ResultViewModel<int>.Error("Usuário não encontrado");
 
-                var loan = request.ToEntity(_returnDays);
+            var loan = request.ToEntity(_returnDays);
 
-                book.SetLoanQuantity();
+            book.SetDecrementQuantity();
 
-                await _bookRepository.Update(book);
+            await _bookRepository.Update(book);
 
-                //throw new ArgumentException("Erro na gravação do livro.");
+            await _repository.Add(loan);
 
-                await _repository.Add(loan);
+            var response = LoanResponseDto.FromEntity(loan);
 
-                //throw new ArgumentException("Erro na gravação do emprestimo.");
+            await _unitOfWork.CommitAsync();
 
-                var response = LoanResponseDto.FromEntity(loan);
-
-                await _unitOfWork.CommitAsync();
-
-                return ResultViewModel<int>.Sucess(response.Id);
-            }
-            catch (Exception)
-            {
-                throw;
-            }
+            return ResultViewModel<int>.Sucess(response.Id);
         }
     }
 }

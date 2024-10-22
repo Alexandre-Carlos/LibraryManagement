@@ -9,7 +9,7 @@ namespace LibraryManagement.Infrastructure.Persistence.Repositories
         private readonly IUnitOfWork _unitOfWork;
         private readonly LibraryManagementDbContext _context;
 
-        public BookRepository(IUnitOfWork unitOfWork, LibraryManagementDbContext context = null)
+        public BookRepository(IUnitOfWork unitOfWork, LibraryManagementDbContext context)
         {
             _unitOfWork = unitOfWork;
             _context = context;
@@ -25,7 +25,8 @@ namespace LibraryManagement.Infrastructure.Persistence.Repositories
 
         public async Task<bool> Exists(int id)
         {
-            return await _context.Books.AnyAsync(c => c.Id ==id && !c.IsDeleted);
+            var retorno = _context.Books.Any(b => b.Id == id && !b.IsDeleted);
+            return retorno;
         }
 
         public async Task<Book?> GetByIdAndHasQuantity(int id)

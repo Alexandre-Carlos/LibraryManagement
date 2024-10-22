@@ -4,7 +4,6 @@ using LibraryManagement.Infrastructure.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System.Diagnostics;
 
 namespace LibraryManagement.Infrastructure
 {
@@ -44,6 +43,5 @@ namespace LibraryManagement.Infrastructure
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             return services;
         }
-
     }
 }

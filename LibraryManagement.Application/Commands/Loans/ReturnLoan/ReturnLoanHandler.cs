@@ -1,6 +1,5 @@
 ﻿using LibraryManagement.Application.Dtos;
 using LibraryManagement.Core.Repositories;
-using LibraryManagement.Infrastructure.Persistence;
 using MediatR;
 
 namespace LibraryManagement.Application.Commands.Loans.ReturnLoan
@@ -39,20 +38,26 @@ namespace LibraryManagement.Application.Commands.Loans.ReturnLoan
             if(loan.IdBook != request.IdBook || loan.IdUser != request.IdUser)
                 return ResultViewModel<string>.Error("Dados para devolução do emprestimo incorretos!");
 
-            loan.SetReturnDate();
-            book.SetDevolutionQuantity();
+            try
+            {
+                loan.SetReturnDate();
+            }
+            catch (Exception ex)
+            {
+                return ResultViewModel<string>.Error("Emprestimo não está ativo!");
+            }
+
+            book.SetIncrementQuantity();
 
             await _bookRepository.Update(book);
 
-           // throw new ArgumentException("Erro na gravação do livro.");
-
             await _repository.Update(loan);
-
-            //throw new ArgumentException("Erro na gravação do emprestimo.");
 
             await _unitOfWork.CommitAsync(); 
 
             return ResultViewModel<string>.Sucess("Devolução realizada com sucesso!");
+
+
         }
     }
 }

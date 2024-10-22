@@ -2,6 +2,8 @@
 {
     public class User : BaseEntity
     {
+        public User() { }
+
         public User(string name, string email) : base()
         {
             Name = name;

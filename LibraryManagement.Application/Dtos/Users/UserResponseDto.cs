@@ -4,6 +4,10 @@ namespace LibraryManagement.Application.Dtos.Users
 {
     public class UserResponseDto
     {
+        public UserResponseDto()
+        {
+            
+        }
         public UserResponseDto(int id, string name, string email)
         {
             Id = id;

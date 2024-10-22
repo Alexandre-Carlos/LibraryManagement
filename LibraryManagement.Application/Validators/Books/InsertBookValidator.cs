@@ -32,7 +32,7 @@ namespace LibraryManagement.Application.Validators.Books
                 .GreaterThanOrEqualTo(1).WithMessage(BookErrorMessages.QuantityGreaterOrEqual)
                 .LessThanOrEqualTo(30).WithMessage(BookErrorMessages.QuantityLessOrEqual);
         }
-            private bool BeIsbnRegex(string isbn)
+         /*   private static bool BeIsbnRegex(string isbn)
             {
                 Regex regex = new Regex(@"^^(?=(?:\D*\d){10}(?:(?:\D*\d){3})?$)[\d-]+$", RegexOptions.IgnoreCase);
 
@@ -41,6 +41,6 @@ namespace LibraryManagement.Application.Validators.Books
                     return false;
                 }
                 return true;
-            }
+            }*/
     }
 }

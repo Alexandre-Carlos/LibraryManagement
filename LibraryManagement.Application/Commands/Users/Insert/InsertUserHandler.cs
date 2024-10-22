@@ -1,7 +1,6 @@
 ﻿using LibraryManagement.Application.Dtos;
 using LibraryManagement.Application.Dtos.Users;
 using LibraryManagement.Core.Repositories;
-using LibraryManagement.Infrastructure.Persistence;
 using MediatR;
 
 namespace LibraryManagement.Application.Commands.Users.Insert

@@ -4,7 +4,8 @@ namespace LibraryManagement.Core.Entities
 {
     public class Book : BaseEntity
     {
-        public Book() { }
+        public Book() { }      
+        
         public Book(string title, string author, string isbn, int yearPublished, int quantity) : base()
         {
             Title = title;
@@ -30,9 +31,15 @@ namespace LibraryManagement.Core.Entities
 
         public List<Loan> Loans {  get; private set; }
 
-        public void SetDevolutionQuantity() => Quantity ++;
+        public void SetIncrementQuantity() => Quantity ++;
 
-        public void SetLoanQuantity() => Quantity --;
+        public void SetDecrementQuantity()
+        {
+            if (Quantity-- >= 0)
+                Quantity--;
+            else
+                throw new InvalidOperationException("Quantidade indisponível!");
+        }
 
         public void SetAddQuantity(int quantity) => Quantity += quantity;
 
