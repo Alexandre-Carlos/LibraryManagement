@@ -2,7 +2,9 @@
 using FluentValidation.AspNetCore;
 using LibraryManagement.Application.Commands.Books.Insert;
 using LibraryManagement.Application.Commands.Loans.Notify;
+using LibraryManagement.Application.Services.Authorize;
 using LibraryManagement.Application.Services.Mail;
+using LibraryManagement.Core.Account;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace LibraryManagement.Application.Configuration
@@ -14,7 +16,8 @@ namespace LibraryManagement.Application.Configuration
             services.AddHandlers()
             .AddValidation()
             .AddServices()
-            .AddSendingServices();
+            .AddSendingServices()
+            .AddAuthenticateService();
 
             return services;
         }
@@ -46,6 +49,12 @@ namespace LibraryManagement.Application.Configuration
         {
             //services.AddTransient<MailKitEmailService>();
             services.AddSingleton<INetMailEmailService, NetMailEmailService>();
+            return services;
+        }
+
+        public static IServiceCollection AddAuthenticateService(this IServiceCollection services) 
+        {
+            services.AddTransient<IAuthenticate, AuthenticateService>();
             return services;
         }
     }

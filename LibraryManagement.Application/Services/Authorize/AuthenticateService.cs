@@ -35,7 +35,7 @@ namespace LibraryManagement.Application.Services.Authorize
 
             var hashLogin = SecurePasswordHasher.Hash(password, user.Salt);
 
-            if (!hashLogin.Hash.Equals(password))
+            if (!hashLogin.Hash.Equals(user.Password))
                 return null;
 
             var token = GenerateToken(user.Id);
