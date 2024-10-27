@@ -2,6 +2,6 @@
 {
     public class Key
     {
-        public string Secret { get; set; }
+        public string SymmetricSecurityKey { get; set; }
     }
 }

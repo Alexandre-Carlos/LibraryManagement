@@ -1,6 +1,6 @@
 ﻿namespace LibraryManagement.Core.Entities
 {
-    public class User : BaseEntity
+    public class User : AuthBase
     {
         public User() { }
 
@@ -25,5 +25,11 @@
             Name = name;
             Email = email;
         }
+
+        public void SetHashPassword(string hash, string salt)
+        {
+            Salt = salt;
+            Password = hash;
+        } 
     }
 }

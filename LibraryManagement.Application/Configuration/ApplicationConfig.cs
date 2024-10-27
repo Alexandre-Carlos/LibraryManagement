@@ -5,6 +5,6 @@
         public ReturnDaysConfig ReturnDaysConfig { get; set; }
         public MailServiceConfig MailServiceConfig { get; set; }
         public WorkerConfig WorkerConfig { get; set; }
-        public Key Key {  get; set; }
+        public Key KeyToken {  get; set; }
     }
 }

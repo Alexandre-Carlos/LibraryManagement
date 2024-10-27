@@ -73,7 +73,7 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 
-var key = Encoding.ASCII.GetBytes(appConfig.Key.Secret);
+var key = Encoding.ASCII.GetBytes(appConfig.KeyToken.SymmetricSecurityKey);
 
 builder.Services.AddAuthentication(x =>
     {

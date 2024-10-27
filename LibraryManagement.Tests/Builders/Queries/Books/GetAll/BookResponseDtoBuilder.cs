@@ -12,8 +12,6 @@ namespace LibraryManagement.Tests.Builders.Queries.Books.GetAll
             instance = new AutoFaker<BookResponseDto>();
         }
 
-
-
         public BookResponseDto Build() => instance.Generate();
     }
 }

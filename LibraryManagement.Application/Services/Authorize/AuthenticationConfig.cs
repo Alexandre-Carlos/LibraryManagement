@@ -9,28 +9,25 @@ namespace LibraryManagement.Application.Services.Authorize
 {
     public static class AuthenticationConfig
     {
-        public static object GenerateToken(User user, ApplicationConfig appConfig) 
+        public static string GenerateToken(int idUser, ApplicationConfig appConfig) 
         {
-            var key = Encoding.ASCII.GetBytes(appConfig.Key.Secret);
+            var symmetricSecurityKey = Encoding.ASCII.GetBytes(appConfig.KeyToken.SymmetricSecurityKey);
 
             var tokenConfig = new SecurityTokenDescriptor
             {
                 Subject = new System.Security.Claims.ClaimsIdentity(new Claim[]
                 {
-                    new Claim("userId", user.Id.ToString()),
+                    new Claim("userId", idUser.ToString()),
                 }),
                 Expires = DateTime.UtcNow.AddHours(3),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(symmetricSecurityKey), SecurityAlgorithms.HmacSha256Signature)
             };
 
             var tokenHandler = new JwtSecurityTokenHandler();
             var tokenCreate = tokenHandler.CreateToken(tokenConfig);
             var token = tokenHandler.WriteToken(tokenCreate);
 
-            return new
-            {
-                Token = token
-            };
+            return token;
         }
     }
 }

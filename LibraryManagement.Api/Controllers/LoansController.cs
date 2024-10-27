@@ -14,7 +14,7 @@ namespace LibraryManagement.Api.Controllers
 {
     [ApiController]
     [Authorize]
-    [Route("api/Loans")]
+    [Route("api/v1/Loans")]
     [Produces("application/json")]
     public class LoansController : ControllerBase
     {

@@ -4,6 +4,7 @@ using LibraryManagement.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LibraryManagement.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(LibraryManagementDbContext))]
-    partial class LibraryManagementDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241023221402_thirdMigration")]
+    partial class thirdMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -66,7 +69,7 @@ namespace LibraryManagement.Infrastructure.Persistence.Migrations
                         {
                             Id = 1,
                             Author = "Robert C. Martin",
-                            CreatedAt = new DateTime(2024, 10, 23, 20, 1, 40, 522, DateTimeKind.Local).AddTicks(2626),
+                            CreatedAt = new DateTime(2024, 10, 23, 19, 14, 1, 971, DateTimeKind.Local).AddTicks(8426),
                             IsDeleted = false,
                             Isbn = "978-8576082675",
                             Quantity = 5,
@@ -77,7 +80,7 @@ namespace LibraryManagement.Infrastructure.Persistence.Migrations
                         {
                             Id = 2,
                             Author = "Robert C. Martin",
-                            CreatedAt = new DateTime(2024, 10, 23, 20, 1, 40, 522, DateTimeKind.Local).AddTicks(2642),
+                            CreatedAt = new DateTime(2024, 10, 23, 19, 14, 1, 971, DateTimeKind.Local).AddTicks(8441),
                             IsDeleted = false,
                             Isbn = "978-8550804606",
                             Quantity = 3,
@@ -88,7 +91,7 @@ namespace LibraryManagement.Infrastructure.Persistence.Migrations
                         {
                             Id = 3,
                             Author = " Aditya Y. Bhargava",
-                            CreatedAt = new DateTime(2024, 10, 23, 20, 1, 40, 522, DateTimeKind.Local).AddTicks(2643),
+                            CreatedAt = new DateTime(2024, 10, 23, 19, 14, 1, 971, DateTimeKind.Local).AddTicks(8442),
                             IsDeleted = false,
                             Isbn = "978-8575225639",
                             Quantity = 8,
@@ -177,28 +180,26 @@ namespace LibraryManagement.Infrastructure.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Email");
-
                     b.ToTable("Users", (string)null);
 
                     b.HasData(
                         new
                         {
-                            Id = 4,
-                            CreatedAt = new DateTime(2024, 10, 23, 20, 1, 40, 523, DateTimeKind.Local).AddTicks(4417),
+                            Id = 1,
+                            CreatedAt = new DateTime(2024, 10, 23, 19, 14, 1, 972, DateTimeKind.Local).AddTicks(7990),
                             Email = "cliente1@teste.com.br",
                             IsDeleted = false,
-                            Name = "Cliente_1",
+                            Name = "Cliente1",
                             Password = "$HASH|V1$10000$hkJQltolSmXA86IJW76J46fST28x1inv1NDGHrmlMKlBVN2c",
                             Salt = "hkJQltolSmXA86IJW76J4w=="
                         },
                         new
                         {
-                            Id = 5,
-                            CreatedAt = new DateTime(2024, 10, 23, 20, 1, 40, 523, DateTimeKind.Local).AddTicks(4425),
+                            Id = 2,
+                            CreatedAt = new DateTime(2024, 10, 23, 19, 14, 1, 972, DateTimeKind.Local).AddTicks(7998),
                             Email = "cliente2@teste.com.br",
                             IsDeleted = false,
-                            Name = "cliente_2",
+                            Name = "cliente2",
                             Password = "$HASH|V1$10000$GDDUHWb1no2cn7BGXZGQ22J4IqpTX5Ng8bH+fV12BhnFl0CV",
                             Salt = "GDDUHWb1no2cn7BGXZGQ2w=="
                         });

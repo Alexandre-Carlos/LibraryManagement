@@ -43,5 +43,10 @@ namespace LibraryManagement.Infrastructure.Persistence.Repositories
             _context.Users.Update(user);
             await _unitOfWork.CompleteAsync();
         }
+
+        public async Task<User?> GetByEmail(string email)
+        {
+            return await _context.Users.SingleOrDefaultAsync(x => x.Email == email && !x.IsDeleted);
+        }
     }
 }

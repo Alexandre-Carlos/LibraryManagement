@@ -4,13 +4,14 @@ using LibraryManagement.Application.Commands.Users.Update;
 using LibraryManagement.Application.Dtos.Users;
 using LibraryManagement.Application.Queries.Users.GetAll;
 using LibraryManagement.Application.Queries.Users.GetById;
+using LibraryManagement.Application.Queries.Users.Login;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LibraryManagement.Api.Controllers
 {
-    [Route("api/users")]
+    [Route("api/v1/users")]
     [ApiController]
     public class UsersController : ControllerBase
     {
@@ -117,6 +118,22 @@ namespace LibraryManagement.Api.Controllers
             
 
             return NoContent();
+        }
+
+        /// <summary>
+        /// Buscar informações de um usuário
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost("Login")]
+        [ProducesResponseType<UserResponseDto>(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> Login([FromBody] LoginUserQuery request)
+        {
+            var response = await _mediator.Send(request);
+            if (!response.IsSuccess)
+                return BadRequest(response);
+
+            return Ok(response);
         }
     }
 }
