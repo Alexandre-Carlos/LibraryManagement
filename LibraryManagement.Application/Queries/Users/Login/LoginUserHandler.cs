@@ -10,7 +10,6 @@ namespace LibraryManagement.Application.Queries.Users.Login
         
         public LoginUserHandler(IAuthenticate authenticate)
         {
- 
             _authenticate = authenticate;
         }
 

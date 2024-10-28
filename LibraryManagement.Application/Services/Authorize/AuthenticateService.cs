@@ -33,12 +33,17 @@ namespace LibraryManagement.Application.Services.Authorize
         {
             var user = await _userRepository.GetByEmail(email);
 
-            var hashLogin = SecurePasswordHasher.Hash(password, user.Salt);
+            /* var hashLogin = SecurePasswordHasher.Hash(password, user.Salt);
 
-            if (!hashLogin.Hash.Equals(user.Password))
+             if (!hashLogin.Hash.Equals(user.Password))
+                 return null;*/
+
+            var teste = SecurePasswordHasher.Verify(password, user.Password);
+
+            if (!teste)
                 return null;
 
-            var token = GenerateToken(user.Id);
+           var token = GenerateToken(user.Id);
 
             return token;
         }
