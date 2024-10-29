@@ -1,5 +1,6 @@
 ﻿using LibraryManagement.Application.Configuration;
 using LibraryManagement.Core.Account;
+using LibraryManagement.Core.Entities;
 using LibraryManagement.Core.Repositories;
 
 namespace LibraryManagement.Application.Services.Authorize
@@ -43,7 +44,7 @@ namespace LibraryManagement.Application.Services.Authorize
             if (!teste)
                 return null;
 
-           var token = GenerateToken(user.Id);
+           var token = GenerateToken(user);
 
             return token;
         }
@@ -56,9 +57,9 @@ namespace LibraryManagement.Application.Services.Authorize
             return true;
         }
 
-        private string GenerateToken(int idUser)
+        private string GenerateToken(User user)
         {
-            var token = AuthenticationConfig.GenerateToken(idUser, _appConfig);
+            var token = AuthenticationConfig.GenerateToken(user, _appConfig);
 
             return token;
         }
