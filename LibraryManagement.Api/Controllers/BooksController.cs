@@ -5,12 +5,14 @@ using LibraryManagement.Application.Dtos.Books;
 using LibraryManagement.Application.Queries.Books.GetAll;
 using LibraryManagement.Application.Queries.Books.GetById;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LibraryManagement.Api.Controllers
 {
-    [Route("api/books")]
+    [Route("api/v1/books")]
     [ApiController]
+    [Authorize]
     public class BooksController : ControllerBase
     {
         private readonly IMediator _mediator;

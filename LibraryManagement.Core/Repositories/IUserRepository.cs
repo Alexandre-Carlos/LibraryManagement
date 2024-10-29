@@ -9,6 +9,6 @@ namespace LibraryManagement.Core.Repositories
         Task<List<User>> GetAll();
         Task<User?> GetById(int id);
         Task<bool> Exist(int id);
-
+        Task<User?> GetByEmail(string email);
     }
 }

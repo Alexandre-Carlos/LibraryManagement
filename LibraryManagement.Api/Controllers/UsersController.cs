@@ -1,15 +1,18 @@
 ﻿using LibraryManagement.Application.Commands.Users.Delete;
 using LibraryManagement.Application.Commands.Users.Insert;
 using LibraryManagement.Application.Commands.Users.Update;
+using LibraryManagement.Application.Constants;
 using LibraryManagement.Application.Dtos.Users;
 using LibraryManagement.Application.Queries.Users.GetAll;
 using LibraryManagement.Application.Queries.Users.GetById;
+using LibraryManagement.Application.Queries.Users.Login;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LibraryManagement.Api.Controllers
 {
-    [Route("api/users")]
+    [Route("api/v1/users")]
     [ApiController]
     public class UsersController : ControllerBase
     {
@@ -26,6 +29,7 @@ namespace LibraryManagement.Api.Controllers
         /// <param name="model">Payload dos dados para adição</param>
         /// <returns></returns>
         [HttpPost]
+        [Authorize(Roles = Roles.Manager)]
         [ProducesResponseType<string>(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Post(InsertUserCommand request)
@@ -45,6 +49,7 @@ namespace LibraryManagement.Api.Controllers
         /// <param name="id">Identificador do usuário</param>
         /// <returns></returns>
         [HttpGet("{id}")]
+        [Authorize(Roles = $"{Roles.Client}, {Roles.Manager}")]
         [ProducesResponseType<UserResponseDto>(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetById(int id)
@@ -63,6 +68,7 @@ namespace LibraryManagement.Api.Controllers
         /// <param name="id">Identificador do usuário</param>
         /// <returns></returns>
         [HttpGet]
+        [Authorize(Roles = Roles.Manager)]
         [ProducesResponseType<UserResponseDto>(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetAll()
@@ -83,6 +89,7 @@ namespace LibraryManagement.Api.Controllers
         /// <param name="model">Payload dos dados para alteração</param>
         /// <returns></returns>
         [HttpPut("{id}")]
+        [Authorize(Roles = Roles.Manager)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Put(int id, [FromBody] UpdateUserCommand request)
@@ -100,6 +107,7 @@ namespace LibraryManagement.Api.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpDelete]
+        [Authorize(Roles = Roles.Manager)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType<string>(StatusCodes.Status400BadRequest)]
@@ -112,6 +120,23 @@ namespace LibraryManagement.Api.Controllers
             
 
             return NoContent();
+        }
+
+        /// <summary>
+        /// Buscar informações de um usuário
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost("Login")]
+        [AllowAnonymous]
+        [ProducesResponseType<UserResponseDto>(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> Login([FromBody] LoginUserQuery request)
+        {
+            var response = await _mediator.Send(request);
+            if (!response.IsSuccess)
+                return BadRequest(response);
+
+            return Ok(response);
         }
     }
 }
