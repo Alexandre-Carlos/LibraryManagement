@@ -6,6 +6,7 @@ using LibraryManagement.Application.Queries.Loans.GetAll;
 using LibraryManagement.Application.Queries.Loans.GetAllUserLoan;
 using LibraryManagement.Application.Queries.Loans.GetById;
 using LibraryManagement.Application.Queries.Loans.GetLoanByBook;
+using LibraryManagement.Core.Constants;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -31,6 +32,7 @@ namespace LibraryManagement.Api.Controllers
         /// <param name="request"></param>
         /// <returns>Dados de Emprestimo salvo</returns>
         [HttpPost]
+        [Authorize(Roles = $"{Roles.Client}, {Roles.Manager}")]
         [ProducesResponseType<LoanResponseDto>(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Loan([FromBody] InsertLoanCommand request)
@@ -48,6 +50,7 @@ namespace LibraryManagement.Api.Controllers
         /// </summary>
         /// <returns>lista de todos os livros emprestados</returns>
         [HttpGet]
+        [Authorize(Roles = $"{Roles.Manager}")]
         [ProducesResponseType<LoanResponseDto>(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetAllLoan()
@@ -65,6 +68,7 @@ namespace LibraryManagement.Api.Controllers
         /// </summary>
         /// <returns>Buscar o livro emprestado</returns>
         [HttpGet("{id}")]
+        [Authorize(Roles = $"{Roles.Client}, {Roles.Manager}")]
         [ProducesResponseType<LoanResponseDto>(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetById(int id)
@@ -83,6 +87,7 @@ namespace LibraryManagement.Api.Controllers
         /// <param name="idUser"></param>
         /// <returns>lista de livros emprestados para um usuário</returns>
         [HttpGet("user/{idUser}")]
+        [Authorize(Roles = $"{Roles.Client}, {Roles.Manager}")]
         [ProducesResponseType<LoanResponseDto>(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetAllUserLoan(int idUser)
@@ -102,6 +107,7 @@ namespace LibraryManagement.Api.Controllers
         /// <param name="idBook">Identificador do Livro emprestado</param>
         /// <returns>Informaç~eso do livro emprestado</returns>
         [HttpGet("{idUser},{idBook}")]
+        [Authorize(Roles = $"{Roles.Client}, {Roles.Manager}")]
         [ProducesResponseType<LoanResponseDto>(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetLoanByBookIdAndUserId(int idUser, int idBook) 
@@ -120,6 +126,7 @@ namespace LibraryManagement.Api.Controllers
         /// <param name="request">Dados do Livro e Usuário</param>
         /// <returns></returns>
         [HttpPost("{id}")]
+        [Authorize(Roles = $"{Roles.Client}, {Roles.Manager}")]
         [ProducesResponseType<string>(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> ReturnLoan(int id, [FromBody] ReturnLoanCommand request)

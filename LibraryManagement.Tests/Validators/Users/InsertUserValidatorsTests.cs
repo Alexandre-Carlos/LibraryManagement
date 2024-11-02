@@ -23,7 +23,7 @@ namespace LibraryManagement.Tests.Validators.Users
         public void Should_Have_Error_For_Incorrect_Or_Correct_Email(string email, bool erro)
         {
             // Arrange
-            var command = new InsertUserCommand { Name = "teste", Email = email };
+            var command = new InsertUserCommand { Name = "teste", Email = email, Password = "123456Az#" };
 
             // Act
             var result = _validator.TestValidate(command);
@@ -63,7 +63,7 @@ namespace LibraryManagement.Tests.Validators.Users
 
             // Assert
             result.ShouldHaveValidationErrorFor(user => user.Name)
-                  .WithErrorMessage(UserErrorMessages.NameMaximuLength);
+                  .WithErrorMessage(UserErrorMessages.NameMaximumLength);
         }
 
         [Fact]
@@ -102,7 +102,8 @@ namespace LibraryManagement.Tests.Validators.Users
             var validCommand = new InsertUserCommand
             {
                 Name = "John Doe",
-                Email = "valid@email.com"
+                Email = "valid@email.com",
+                Password = "123456Az#"
             };
 
             // Act

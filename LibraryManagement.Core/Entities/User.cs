@@ -1,4 +1,6 @@
-﻿namespace LibraryManagement.Core.Entities
+﻿using LibraryManagement.Core.Constants;
+
+namespace LibraryManagement.Core.Entities
 {
     public class User : AuthBase
     {
@@ -8,6 +10,15 @@
         {
             Name = name;
             Email = email;
+            Role = Roles.Client;
+            Loans = [];
+        }
+
+        public User(string name, string email, string role) : base()
+        {
+            Name = name;
+            Email = email;
+            Role = role;
             Loans = [];
         }
 
@@ -32,5 +43,7 @@
             Salt = salt;
             Password = hash;
         } 
+
+
     }
 }

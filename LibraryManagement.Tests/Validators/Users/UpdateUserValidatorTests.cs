@@ -40,7 +40,7 @@ namespace LibraryManagement.Tests.Validators.Users
 
             // Assert
             result.ShouldHaveValidationErrorFor(user => user.Name)
-                    .WithErrorMessage(UserErrorMessages.NameMaximuLength);
+                    .WithErrorMessage(UserErrorMessages.NameMaximumLength);
         }
 
         [Fact]

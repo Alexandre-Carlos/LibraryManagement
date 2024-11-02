@@ -23,11 +23,12 @@ namespace LibraryManagement.Infrastructure.Persistence.EntityConfig
                    .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasData(
-                new {Id = 1, Name = "Cliente_1", Email = "cliente1@teste.com.br", Password = "$HASH|V1$10000$hkJQltolSmXA86IJW76J46fST28x1inv1NDGHrmlMKlBVN2c", Salt = "hkJQltolSmXA86IJW76J4w==", Role = "Client", CreatedAt = DateTime.Now, IsDeleted = false },
-                new {Id = 2, Name = "cliente_2", Email = "cliente2@teste.com.br", Password = "$HASH|V1$10000$GDDUHWb1no2cn7BGXZGQ22J4IqpTX5Ng8bH+fV12BhnFl0CV", Salt = "GDDUHWb1no2cn7BGXZGQ2w==", Role = "Client",CreatedAt = DateTime.Now, IsDeleted = false },
-                new {Id = 99, Name = "Admin", Email = "admin@teste.com.br", Password = "$HASH|V1$10000$GDDUHWb1no2cn7BGXZGQ22J4IqpTX5Ng8bH+fV12BhnFl0CV", Salt = "GDDUHWb1no2cn7BGXZGQ2w==", Role = "Manager", CreatedAt = DateTime.Now, IsDeleted = false }
-
-
+                new {Id = 1, Name = "Cliente_1", Email = "cliente1@teste.com.br", Password = "$HASH|V1$10000$hkJQltolSmXA86IJW76J46fST28x1inv1NDGHrmlMKlBVN2c", 
+                    Salt = "hkJQltolSmXA86IJW76J4w==", Role = "Client", CreatedAt = DateTime.Now, IsDeleted = false },
+                new {Id = 2, Name = "cliente_2", Email = "cliente2@teste.com.br", Password = "$HASH|V1$10000$GDDUHWb1no2cn7BGXZGQ22J4IqpTX5Ng8bH+fV12BhnFl0CV", 
+                    Salt = "GDDUHWb1no2cn7BGXZGQ2w==", Role = "Client",CreatedAt = DateTime.Now, IsDeleted = false },
+                new {Id = 99, Name = "Admin", Email = "admin@teste.com.br", Password = "$HASH|V1$10000$GDDUHWb1no2cn7BGXZGQ22J4IqpTX5Ng8bH+fV12BhnFl0CV", 
+                    Salt = "GDDUHWb1no2cn7BGXZGQ2w==", Role = "Manager", CreatedAt = DateTime.Now, IsDeleted = false }
             );
 
         }

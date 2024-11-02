@@ -37,11 +37,11 @@ namespace LibraryManagement.Tests.Commands.Users.Insert
 
             _userRepository.Setup(u => u.Add(It.IsAny<User>())).ReturnsAsync(user.Id);
 
-            _authenticate.Setup(u => u.UserExist(It.IsAny<string>())).ReturnsAsync(true);
+            _authenticate.Setup(u => u.UserExist(It.IsAny<string>())).ReturnsAsync(false);
 
             var hashResponse = new HashResponse() { Hash = "$HASH|V1$10000$s40yWJytZ6qfP+jXX9Kv4iHqZO6OumAi43n8XbPuS3F2OIwq", Salt = "s40yWJytZ6qfP+jXX9Kv4g==" };
 
-            _authenticate.Setup(u => u.GenerateHashPassword(It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(hashResponse);
+            _authenticate.Setup(u => u.CreateHashPassword(It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(hashResponse);
 
             user.Invoking(x => x.SetHashPassword(hashResponse.Hash, hashResponse.Salt));
 
@@ -73,13 +73,13 @@ namespace LibraryManagement.Tests.Commands.Users.Insert
 
             _userRepository.Setup(u => u.Add(It.IsAny<User>())).ReturnsAsync(user.Id);
 
-            _authenticate.Setup(u => u.UserExist(It.IsAny<string>())).ReturnsAsync(false);
+            _authenticate.Setup(u => u.UserExist(It.IsAny<string>())).ReturnsAsync(true);
 
             var response = new InsertUserHandler(_userRepository.Object, _unitOfWork.Object, _authenticate.Object);
 
             var result = await response.Handle(request, new CancellationToken());
 
-            result.Message.Should().BeSameAs("Erro no Login!");
+            result.Message.Should().BeSameAs("Erro na gravação do usuário!");
 
             _unitOfWork.Verify(u => u.BeginTransactionAsync(), Times.Once);
 
@@ -99,21 +99,21 @@ namespace LibraryManagement.Tests.Commands.Users.Insert
 
             _userRepository.Setup(u => u.Add(It.IsAny<User>())).ReturnsAsync(user.Id);
 
-            _authenticate.Setup(u => u.UserExist(It.IsAny<string>())).ReturnsAsync(true);
+            _authenticate.Setup(u => u.UserExist(It.IsAny<string>())).ReturnsAsync(false);
 
-            _authenticate.Setup(u => u.GenerateHashPassword(It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync((HashResponse)null);
+            _authenticate.Setup(u => u.CreateHashPassword(It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync((HashResponse)null);
 
             var response = new InsertUserHandler(_userRepository.Object, _unitOfWork.Object, _authenticate.Object);
 
             var result = await response.Handle(request, new CancellationToken());
 
-             result.Message.Should().BeSameAs("Erro no Login!");
+             result.Message.Should().BeSameAs("Erro na gravação do usuário!");
 
             _unitOfWork.Verify(u => u.BeginTransactionAsync(), Times.Once);
 
             _authenticate.Verify(r => r.UserExist(It.IsAny<string>()), Times.Once);
 
-            _authenticate.Verify(r => r.GenerateHashPassword(It.IsAny<string>(), It.IsAny<string>()), Times.Once);
+            _authenticate.Verify(r => r.CreateHashPassword(It.IsAny<string>(), It.IsAny<string>()), Times.Once);
         }
     }
 }

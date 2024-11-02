@@ -1,4 +1,4 @@
-﻿namespace LibraryManagement.Application.Constants
+﻿namespace LibraryManagement.Core.Constants
 {
     public static class Roles
     {
