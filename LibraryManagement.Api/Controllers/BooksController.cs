@@ -4,6 +4,7 @@ using LibraryManagement.Application.Commands.Books.Update;
 using LibraryManagement.Application.Dtos.Books;
 using LibraryManagement.Application.Queries.Books.GetAll;
 using LibraryManagement.Application.Queries.Books.GetById;
+using LibraryManagement.Core.Constants;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -27,6 +28,7 @@ namespace LibraryManagement.Api.Controllers
         /// </summary>
         /// <returns>Lista de Livros</returns>
         [HttpGet]
+        [Authorize(Roles = $"{Roles.Client}, {Roles.Manager}")]
         [ProducesResponseType<BookResponseDto>(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> GetAll()
@@ -45,6 +47,7 @@ namespace LibraryManagement.Api.Controllers
         /// <param name="id">Identificador do Livro</param>
         /// <returns>Dados do Livro</returns>
         [HttpGet("{id}")]
+        [Authorize(Roles = $"{Roles.Client}, {Roles.Manager}")]
         [ProducesResponseType<BookResponseDto>(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetById(int id)
@@ -63,6 +66,7 @@ namespace LibraryManagement.Api.Controllers
         /// <param name="model">Payload dos dados para adição</param>
         /// <returns>Informações do livro adicionado</returns>
         [HttpPost]
+        [Authorize(Roles = $"{Roles.Manager}")]
         [ProducesResponseType<BookResponseDto>(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Post([FromBody] InsertBookCommand request)
@@ -82,6 +86,7 @@ namespace LibraryManagement.Api.Controllers
         /// <param name="model">Payload dos dados para alteração</param>
         /// <returns></returns>
         [HttpPut("{id}")]
+        [Authorize(Roles = $"{Roles.Manager}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Put(int id, [FromBody] UpdateBookCommand request)
@@ -100,6 +105,7 @@ namespace LibraryManagement.Api.Controllers
         /// <param name="id">Identificador do Livro</param>
         /// <returns></returns>
         [HttpDelete("{id}")]
+        [Authorize(Roles = $"{Roles.Manager}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType<string>(StatusCodes.Status400BadRequest)]

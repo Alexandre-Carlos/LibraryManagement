@@ -29,6 +29,12 @@ namespace LibraryManagement.Application.Services.Authorize
             return hashLogin;
         }
 
+        public async Task<HashResponse> CreateHashPassword(string email, string password)
+        {
+           var hashLogin = SecurePasswordHasher.Hash(password);
+
+            return hashLogin;
+        }
 
         public async Task<string> AuthenticateAsync(string email, string password)
         {

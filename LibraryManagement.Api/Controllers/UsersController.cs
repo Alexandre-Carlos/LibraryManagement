@@ -1,11 +1,11 @@
 ﻿using LibraryManagement.Application.Commands.Users.Delete;
 using LibraryManagement.Application.Commands.Users.Insert;
 using LibraryManagement.Application.Commands.Users.Update;
-using LibraryManagement.Application.Constants;
 using LibraryManagement.Application.Dtos.Users;
 using LibraryManagement.Application.Queries.Users.GetAll;
 using LibraryManagement.Application.Queries.Users.GetById;
 using LibraryManagement.Application.Queries.Users.Login;
+using LibraryManagement.Core.Constants;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

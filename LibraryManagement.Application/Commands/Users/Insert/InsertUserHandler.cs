@@ -7,7 +7,7 @@ using MediatR;
 
 namespace LibraryManagement.Application.Commands.Users.Insert
 {
-    public class InsertUserHandler : IRequestHandler<InsertUserCommand, ResultViewModel>
+    public class InsertUserHandler : IRequestHandler<InsertUserCommand, ResultViewModel<int>>
     {
         private readonly IUserRepository _repository;
         private readonly IAuthenticate _authenticate;
@@ -20,18 +20,18 @@ namespace LibraryManagement.Application.Commands.Users.Insert
             _authenticate = authenticate;
         }
 
-        public async Task<ResultViewModel> Handle(InsertUserCommand request, CancellationToken cancellationToken)
+        public async Task<ResultViewModel<int>> Handle(InsertUserCommand request, CancellationToken cancellationToken)
         {
             await _unitOfWork.BeginTransactionAsync();
 
             var user = request.ToEntity();
 
             var isUserExist = await _authenticate.UserExist(request.Email);
-            if (!isUserExist) return ResultViewModel.Error("Erro no Login!");
+            if (isUserExist) return ResultViewModel<int>.Error("Erro na gravação do usuário!");
 
-            var hashResponse = await _authenticate.GenerateHashPassword(request.Email, request.Password);
+            var hashResponse = await _authenticate.CreateHashPassword(request.Email, request.Password);
 
-            if(hashResponse == null) return ResultViewModel.Error("Erro no Login!");
+            if(hashResponse == null) return ResultViewModel<int>.Error("Erro na gravação do usuário!");
 
             user.SetHashPassword(hashResponse.Hash, hashResponse.Salt);
 
