@@ -1,5 +1,4 @@
-﻿using LibraryManagement.Application.Dtos;
-using LibraryManagement.Application.Services.Authorize;
+﻿using LibraryManagement.Application.Services.Authorize;
 
 namespace LibraryManagement.Core.Account
 {
